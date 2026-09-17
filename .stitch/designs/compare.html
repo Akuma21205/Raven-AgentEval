@@ -1,0 +1,703 @@
+<!DOCTYPE html><html lang="en" class="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentEval Compare Experiments</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              bg: '#090D1A',
+              card: '#0F172A',
+              cardBorder: 'rgba(255, 255, 255, 0.08)',
+              accentBlue: '#3B82F6',
+              accentPurple: '#8B5CF6',
+              accentOrange: '#F97316',
+              accentEmerald: '#10B981',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #090D1A;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #F8FAFC;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card-subtle {
+      background: rgba(17, 24, 39, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090D1A;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#090D1A] text-slate-100 flex antialiased selection:bg-purple-500/30 selection:text-purple-200">
+
+  <!-- Left Sidebar (Consistent with AgentEval templates) -->
+  <aside class="fixed top-0 left-0 h-screen w-64 flex flex-col justify-between p-4 border-r border-white/10 bg-[#0B1120]/80 backdrop-blur-xl z-30">
+    <div>
+      <!-- Brand / Logo -->
+      <div class="flex items-center gap-3 px-2 py-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-500 to-purple-400 flex items-center justify-center shadow-lg shadow-purple-500/25">
+          <span class="material-symbols-outlined text-white text-22">auto_awesome</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-bold text-lg text-white tracking-tight">AgentEval</span>
+            <span class="text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">v2</span>
+          </div>
+          <p class="text-xs text-slate-400">AI Benchmarking Platform</p>
+        </div>
+      </div>
+
+      <!-- New Experiment CTA -->
+      <button class="w-full mb-6 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium text-sm shadow-lg shadow-purple-900/40 hover:shadow-purple-700/50 transition-all duration-200 active:scale-[0.98]">
+        <span class="material-symbols-outlined text-sm">add</span>
+        <span>New Experiment</span>
+      </button>
+
+      <!-- Navigation Links -->
+      <nav class="space-y-1">
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined text-xl">grid_view</span>
+          <span>Overview</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined text-xl">tune</span>
+          <span>Benchmarks</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined text-xl">science</span>
+          <span>Runs &amp; Evals</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined text-xl">smart_toy</span>
+          <span>Models</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined text-xl">dataset</span>
+          <span>Datasets</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined text-xl">conversion_path</span>
+          <span>Traces</span>
+        </a>
+
+        <!-- Compare Tab: Active with glowing purple/blue pill highlight -->
+        <a href="#" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-purple-600/30 via-indigo-600/25 to-blue-600/20 border border-purple-500/40 shadow-sm shadow-purple-900/30">
+          <span class="material-symbols-outlined text-xl text-purple-400">compare_arrows</span>
+          <span>Compare</span>
+          <span class="ml-auto w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_#A855F7]"></span>
+        </a>
+
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined text-xl">terminal</span>
+          <span>Playground</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined text-xl">settings</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Footer Links -->
+    <div class="pt-4 border-t border-white/10 space-y-2">
+      <div class="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+        <div class="flex items-center justify-between text-xs font-medium text-slate-300 mb-1">
+          <span>Pro Plan</span>
+          <span class="text-purple-400">Active</span>
+        </div>
+        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mb-2">
+          <div class="bg-gradient-to-r from-purple-500 to-indigo-500 h-full w-[42%]"></div>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-slate-400">
+          <span>Runs used</span>
+          <span class="font-mono text-slate-200">4.2K / 10K</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between px-2 pt-2 text-xs text-slate-400">
+        <a href="#" class="hover:text-white flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">menu_book</span> Docs
+        </a>
+        <a href="#" class="hover:text-white flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">headset_mic</span> Support
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="ml-64 flex-1 flex flex-col min-h-screen">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-20 flex items-center justify-between px-8 py-3.5 border-b border-white/10 bg-[#090D1A]/80 backdrop-blur-xl">
+      <div class="flex items-center gap-4 flex-1 max-w-lg">
+        <div class="relative w-full">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+          <input type="text" placeholder="Search experiments, metrics, runs... (⌘K)" class="w-full pl-9 pr-4 py-2 bg-white/[0.04] border border-white/10 rounded-xl text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/40 transition-all">
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <!-- Notification button -->
+        <button class="relative p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined text-xl">notifications</span>
+          <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-purple-500"></span>
+        </button>
+        <!-- Help -->
+        <button class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined text-xl">help_outline</span>
+        </button>
+        <!-- Divider -->
+        <div class="h-6 w-px bg-white/10"></div>
+        <!-- User Profile -->
+        <div class="flex items-center gap-3 pl-2">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-400 flex items-center justify-center text-xs font-bold text-white shadow-md">
+            S
+          </div>
+          <div class="text-left hidden sm:block">
+            <div class="text-xs font-semibold text-white leading-tight">Shashank</div>
+            <div class="text-[11px] text-slate-400 leading-tight">Senior ML Eng</div>
+          </div>
+          <span class="material-symbols-outlined text-slate-400 text-sm">expand_more</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Body -->
+    <div class="p-8 space-y-8 max-w-7xl w-full mx-auto">
+
+      <!-- Breadcrumbs -->
+      <nav class="flex items-center gap-2 text-xs text-slate-400">
+        <a href="#" class="hover:text-slate-200 transition-colors">Experiments</a>
+        <span class="material-symbols-outlined text-xs">chevron_right</span>
+        <span class="text-purple-400 font-medium">Compare</span>
+      </nav>
+
+      <!-- Header Row -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+            <span>Compare Experiments</span>
+            <span class="text-xs font-mono font-medium px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20">3 selected</span>
+          </h1>
+          <p class="mt-1 text-sm text-slate-400">
+            Compare up to 3 experiments. See how your agent versions stack up.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button class="flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium text-slate-300 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 transition-colors">
+            <span class="material-symbols-outlined text-base">tune</span>
+            <span>Filter Metrics</span>
+          </button>
+          <!-- + Add Experiments filled vibrant purple pill button -->
+          <button class="flex items-center gap-2 px-4 py-2 rounded-full bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold shadow-lg shadow-purple-700/30 hover:shadow-purple-600/40 transition-all duration-200 active:scale-95">
+            <span class="material-symbols-outlined text-base font-bold">add</span>
+            <span>Add Experiments</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3 Version Selector Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+        <!-- Card 1 (Blue accent) -->
+        <div class="glass-card rounded-2xl p-5 relative overflow-hidden group hover:border-blue-500/40 transition-all duration-300 shadow-xl shadow-black/20">
+          <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-blue-400"></div>
+          
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_#3B82F6]"></span>
+              <h2 class="text-xl font-bold text-white tracking-tight font-mono">v1.2.1</h2>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/30">
+              Baseline
+            </span>
+          </div>
+
+          <p class="text-xs text-slate-400 mb-4 line-clamp-1">Customer Support • Initial release candidate</p>
+
+          <div class="grid grid-cols-2 gap-2 pt-3 border-t border-white/5 text-xs">
+            <div>
+              <span class="text-slate-400">Model:</span>
+              <span class="text-slate-200 font-mono font-medium ml-1">gpt-4o</span>
+            </div>
+            <div>
+              <span class="text-slate-400">Samples:</span>
+              <span class="text-slate-200 font-mono font-medium ml-1">500 runs</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 (Purple accent) -->
+        <div class="glass-card rounded-2xl p-5 relative overflow-hidden group hover:border-purple-500/40 transition-all duration-300 shadow-xl shadow-black/20">
+          <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-purple-400"></div>
+
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_10px_#8B5CF6]"></span>
+              <h2 class="text-xl font-bold text-white tracking-tight font-mono">v1.3.0</h2>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30">
+              Current
+            </span>
+          </div>
+
+          <p class="text-xs text-slate-400 mb-4 line-clamp-1">Customer Support • Optimized prompt chain</p>
+
+          <div class="grid grid-cols-2 gap-2 pt-3 border-t border-white/5 text-xs">
+            <div>
+              <span class="text-slate-400">Model:</span>
+              <span class="text-slate-200 font-mono font-medium ml-1">gpt-4o</span>
+            </div>
+            <div>
+              <span class="text-slate-400">Samples:</span>
+              <span class="text-slate-200 font-mono font-medium ml-1">500 runs</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 (Orange accent) -->
+        <div class="glass-card rounded-2xl p-5 relative overflow-hidden group hover:border-orange-500/40 transition-all duration-300 shadow-xl shadow-black/20">
+          <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 to-orange-400"></div>
+
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_10px_#F97316]"></span>
+              <h2 class="text-xl font-bold text-white tracking-tight font-mono">v1.3.1</h2>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/30">
+              Experimental
+            </span>
+          </div>
+
+          <p class="text-xs text-slate-400 mb-4 line-clamp-1">Customer Support • Fine-tuned router model</p>
+
+          <div class="grid grid-cols-2 gap-2 pt-3 border-t border-white/5 text-xs">
+            <div>
+              <span class="text-slate-400">Model:</span>
+              <span class="text-slate-200 font-mono font-medium ml-1">ft:gpt-4o-mini</span>
+            </div>
+            <div>
+              <span class="text-slate-400">Samples:</span>
+              <span class="text-slate-200 font-mono font-medium ml-1">500 runs</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 4. Metrics Comparison Table (glassmorphic card) -->
+      <section class="glass-card rounded-2xl overflow-hidden shadow-2xl">
+        <div class="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-purple-400 text-xl">table_chart</span>
+            <h3 class="text-base font-semibold text-white">Metrics Comparison</h3>
+          </div>
+          <div class="text-xs text-slate-400">
+            Green indicates optimal result among compared versions
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-white/10 text-xs font-semibold uppercase tracking-wider text-slate-400 bg-white/[0.02]">
+                <th class="py-3.5 px-6">Metric</th>
+                <th class="py-3.5 px-6">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                    <span class="text-white font-mono">v1.2.1</span>
+                    <span class="text-[10px] text-blue-400 font-sans font-normal">(Baseline)</span>
+                  </div>
+                </th>
+                <th class="py-3.5 px-6">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                    <span class="text-white font-mono">v1.3.0</span>
+                    <span class="text-[10px] text-purple-300 font-sans font-normal">(Current)</span>
+                  </div>
+                </th>
+                <th class="py-3.5 px-6">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+                    <span class="text-white font-mono">v1.3.1</span>
+                    <span class="text-[10px] text-orange-400 font-sans font-normal">(Experimental)</span>
+                  </div>
+                </th>
+                <th class="py-3.5 px-6 text-right">Delta (vs Baseline)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5 text-sm">
+
+              <!-- Task Success: 82.1% | 87.4% | 88.6% (green) -->
+              <tr class="hover:bg-white/[0.02] transition-colors">
+                <td class="py-4 px-6 font-medium text-slate-200 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-base text-slate-400">check_circle</span>
+                  Task Success
+                </td>
+                <td class="py-4 px-6 font-mono text-slate-300">82.1%</td>
+                <td class="py-4 px-6 font-mono text-slate-300">87.4%</td>
+                <td class="py-4 px-6 font-mono font-semibold text-emerald-400 bg-emerald-500/5">
+                  88.6%
+                  <span class="ml-1 text-[11px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans">Best</span>
+                </td>
+                <td class="py-4 px-6 text-right font-mono text-xs text-emerald-400 font-medium">
+                  +6.5% ↑
+                </td>
+              </tr>
+
+              <!-- Tool Selection: 89.3% | 92.1% | 91.0% (green) -->
+              <tr class="hover:bg-white/[0.02] transition-colors">
+                <td class="py-4 px-6 font-medium text-slate-200 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-base text-slate-400">build</span>
+                  Tool Selection
+                </td>
+                <td class="py-4 px-6 font-mono text-slate-300">89.3%</td>
+                <td class="py-4 px-6 font-mono font-semibold text-emerald-400 bg-emerald-500/5">
+                  92.1%
+                  <span class="ml-1 text-[11px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans">Best</span>
+                </td>
+                <td class="py-4 px-6 font-mono text-slate-300">91.0%</td>
+                <td class="py-4 px-6 text-right font-mono text-xs text-emerald-400 font-medium">
+                  +2.8% ↑
+                </td>
+              </tr>
+
+              <!-- Tool Arguments: 84.2% | 88.3% | 86.7% (green) -->
+              <tr class="hover:bg-white/[0.02] transition-colors">
+                <td class="py-4 px-6 font-medium text-slate-200 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-base text-slate-400">data_object</span>
+                  Tool Arguments
+                </td>
+                <td class="py-4 px-6 font-mono text-slate-300">84.2%</td>
+                <td class="py-4 px-6 font-mono font-semibold text-emerald-400 bg-emerald-500/5">
+                  88.3%
+                  <span class="ml-1 text-[11px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans">Best</span>
+                </td>
+                <td class="py-4 px-6 font-mono text-slate-300">86.7%</td>
+                <td class="py-4 px-6 text-right font-mono text-xs text-emerald-400 font-medium">
+                  +4.1% ↑
+                </td>
+              </tr>
+
+              <!-- Latency (s): 3.8 | 3.2 | 3.6 -->
+              <tr class="hover:bg-white/[0.02] transition-colors">
+                <td class="py-4 px-6 font-medium text-slate-200 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-base text-slate-400">schedule</span>
+                  Latency (s)
+                </td>
+                <td class="py-4 px-6 font-mono text-slate-300">3.8s</td>
+                <td class="py-4 px-6 font-mono font-semibold text-emerald-400 bg-emerald-500/5">
+                  3.2s
+                  <span class="ml-1 text-[11px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans">Fastest</span>
+                </td>
+                <td class="py-4 px-6 font-mono text-slate-300">3.6s</td>
+                <td class="py-4 px-6 text-right font-mono text-xs text-emerald-400 font-medium">
+                  -0.6s ↓
+                </td>
+              </tr>
+
+              <!-- Hallucination Rate: 6.2% | 4.1% | 5.3% -->
+              <tr class="hover:bg-white/[0.02] transition-colors">
+                <td class="py-4 px-6 font-medium text-slate-200 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-base text-slate-400">psychology_alt</span>
+                  Hallucination Rate
+                </td>
+                <td class="py-4 px-6 font-mono text-slate-300">6.2%</td>
+                <td class="py-4 px-6 font-mono font-semibold text-emerald-400 bg-emerald-500/5">
+                  4.1%
+                  <span class="ml-1 text-[11px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans">Lowest</span>
+                </td>
+                <td class="py-4 px-6 font-mono text-slate-300">5.3%</td>
+                <td class="py-4 px-6 text-right font-mono text-xs text-emerald-400 font-medium">
+                  -2.1% ↓
+                </td>
+              </tr>
+
+              <!-- Total Cost: $10.4 | $12.4 | $11.1 -->
+              <tr class="hover:bg-white/[0.02] transition-colors">
+                <td class="py-4 px-6 font-medium text-slate-200 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-base text-slate-400">payments</span>
+                  Total Cost
+                </td>
+                <td class="py-4 px-6 font-mono font-semibold text-emerald-400 bg-emerald-500/5">
+                  $10.4
+                  <span class="ml-1 text-[11px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans">Lowest</span>
+                </td>
+                <td class="py-4 px-6 font-mono text-slate-300">$12.4</td>
+                <td class="py-4 px-6 font-mono text-slate-300">$11.1</td>
+                <td class="py-4 px-6 text-right font-mono text-xs text-orange-400 font-medium">
+                  +$0.7
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5. Performance Comparison Grouped Bar Chart (card below table) -->
+      <section class="glass-card rounded-2xl p-6 sm:p-7 shadow-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-6 border-b border-white/10 gap-4">
+          <div>
+            <h3 class="text-base font-semibold text-white flex items-center gap-2">
+              <span class="material-symbols-outlined text-purple-400">bar_chart</span>
+              Performance Comparison
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Normalized percentage scores across key benchmark dimensions</p>
+          </div>
+
+          <!-- Legend: v1.2.1 (blue dot), v1.3.0 (purple dot), v1.3.1 (orange dot) -->
+          <div class="flex items-center gap-5 text-xs font-mono font-medium">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]"></span>
+              <span class="text-slate-200">v1.2.1</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(139,92,246,0.6)]"></span>
+              <span class="text-slate-200">v1.3.0</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.6)]"></span>
+              <span class="text-slate-200">v1.3.1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart Grid with Y-axis & 5 Metric Groups -->
+        <div class="pt-8 pb-4">
+          <div class="flex h-72">
+
+            <!-- Y-Axis (0%, 25%, 50%, 75%, 100%) -->
+            <div class="flex flex-col justify-between text-right pr-4 text-xs font-mono text-slate-400 w-12 select-none">
+              <span>100%</span>
+              <span>75%</span>
+              <span>50%</span>
+              <span>25%</span>
+              <span>0%</span>
+            </div>
+
+            <!-- Chart Plot Area -->
+            <div class="flex-1 relative border-l border-b border-white/15 pl-4">
+              
+              <!-- Horizontal gridlines -->
+              <div class="absolute inset-0 flex flex-col justify-between pointer-events-none pr-2">
+                <div class="w-full border-t border-white/5"></div>
+                <div class="w-full border-t border-white/5"></div>
+                <div class="w-full border-t border-white/5"></div>
+                <div class="w-full border-t border-white/5"></div>
+                <div class="w-full"></div>
+              </div>
+
+              <!-- 5 Metric Groups Container -->
+              <div class="relative h-full flex justify-around items-end z-10 px-2 sm:px-6">
+
+                <!-- Group 1: Task Success (82.1%, 87.4%, 88.6%) -->
+                <div class="flex flex-col items-center h-full justify-end group">
+                  <div class="flex items-end gap-2 sm:gap-2.5 h-full pb-1">
+                    <!-- Blue Bar -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(59,130,246,0.3)]" style="height: 200px;"></div>
+                      <!-- Tooltip -->
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-blue-300 pointer-events-none">
+                        82.1%
+                      </div>
+                    </div>
+                    <!-- Purple Bar -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-purple-600 to-purple-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(139,92,246,0.3)]" style="height: 213px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-purple-300 pointer-events-none">
+                        87.4%
+                      </div>
+                    </div>
+                    <!-- Orange Bar -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-orange-600 to-orange-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(249,115,22,0.3)]" style="height: 216px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-orange-300 pointer-events-none">
+                        88.6%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Group 2: Tool Selection (89.3%, 92.1%, 91.0%) -->
+                <div class="flex flex-col items-center h-full justify-end group">
+                  <div class="flex items-end gap-2 sm:gap-2.5 h-full pb-1">
+                    <!-- Blue Bar -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(59,130,246,0.3)]" style="height: 218px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-blue-300 pointer-events-none">
+                        89.3%
+                      </div>
+                    </div>
+                    <!-- Purple Bar -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-purple-600 to-purple-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(139,92,246,0.3)]" style="height: 225px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-purple-300 pointer-events-none">
+                        92.1%
+                      </div>
+                    </div>
+                    <!-- Orange Bar -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-orange-600 to-orange-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(249,115,22,0.3)]" style="height: 222px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-orange-300 pointer-events-none">
+                        91.0%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Group 3: Tool Arguments (84.2%, 88.3%, 86.7%) -->
+                <div class="flex flex-col items-center h-full justify-end group">
+                  <div class="flex items-end gap-2 sm:gap-2.5 h-full pb-1">
+                    <!-- Blue Bar -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(59,130,246,0.3)]" style="height: 205px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-blue-300 pointer-events-none">
+                        84.2%
+                      </div>
+                    </div>
+                    <!-- Purple Bar -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-purple-600 to-purple-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(139,92,246,0.3)]" style="height: 215px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-purple-300 pointer-events-none">
+                        88.3%
+                      </div>
+                    </div>
+                    <!-- Orange Bar -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-orange-600 to-orange-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(249,115,22,0.3)]" style="height: 211px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-orange-300 pointer-events-none">
+                        86.7%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Group 4: Latency (Normalized score: lower latency is better -> inverted/normalized benchmark index 62%, 78%, 68%) -->
+                <div class="flex flex-col items-center h-full justify-end group">
+                  <div class="flex items-end gap-2 sm:gap-2.5 h-full pb-1">
+                    <!-- Blue Bar (3.8s) -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(59,130,246,0.3)]" style="height: 152px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-blue-300 pointer-events-none">
+                        3.8s
+                      </div>
+                    </div>
+                    <!-- Purple Bar (3.2s - Best) -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-purple-600 to-purple-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(139,92,246,0.3)]" style="height: 190px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-purple-300 pointer-events-none">
+                        3.2s
+                      </div>
+                    </div>
+                    <!-- Orange Bar (3.6s) -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-orange-600 to-orange-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(249,115,22,0.3)]" style="height: 168px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-orange-300 pointer-events-none">
+                        3.6s
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Group 5: Hallucination Rate (Inverted safety score: 93.8%, 95.9%, 94.7%) -->
+                <div class="flex flex-col items-center h-full justify-end group">
+                  <div class="flex items-end gap-2 sm:gap-2.5 h-full pb-1">
+                    <!-- Blue Bar (6.2% err -> 93.8% grounded) -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(59,130,246,0.3)]" style="height: 228px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-blue-300 pointer-events-none">
+                        6.2%
+                      </div>
+                    </div>
+                    <!-- Purple Bar (4.1% err -> 95.9% grounded) -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-purple-600 to-purple-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(139,92,246,0.3)]" style="height: 235px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-purple-300 pointer-events-none">
+                        4.1%
+                      </div>
+                    </div>
+                    <!-- Orange Bar (5.3% err -> 94.7% grounded) -->
+                    <div class="relative group/bar flex flex-col items-center">
+                      <div class="w-4 sm:w-6 bg-gradient-to-t from-orange-600 to-orange-400 rounded-t-md hover:brightness-110 transition-all shadow-[0_0_12px_rgba(249,115,22,0.3)]" style="height: 231px;"></div>
+                      <div class="absolute -top-7 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-slate-900 border border-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono text-orange-300 pointer-events-none">
+                        5.3%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- X-Axis Labels (5 Metric Groups) -->
+          <div class="flex pl-16 pr-2 sm:px-6 pt-3 text-xs font-medium text-slate-400 justify-around text-center">
+            <div class="w-24 sm:w-28">Task Success</div>
+            <div class="w-24 sm:w-28">Tool Selection</div>
+            <div class="w-24 sm:w-28">Tool Arguments</div>
+            <div class="w-24 sm:w-28">Latency (s)</div>
+            <div class="w-24 sm:w-28">Hallucination Rate</div>
+          </div>
+        </div>
+
+        <!-- Quick Summary Insight Footer -->
+        <div class="mt-6 pt-4 border-t border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-400">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-purple-400 text-sm">tips_and_updates</span>
+            <span><strong class="text-slate-200">Key takeaway:</strong> <span class="text-purple-300 font-mono">v1.3.0</span> delivers the lowest latency (3.2s) and hallucination rate (4.1%), while <span class="text-orange-300 font-mono">v1.3.1</span> edges ahead in overall Task Success (88.6%).</span>
+          </div>
+          <button class="text-purple-400 hover:text-purple-300 font-medium flex items-center gap-1 transition-colors">
+            <span>Export CSV</span>
+            <span class="material-symbols-outlined text-xs">download</span>
+          </button>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+
+
+</body></html>

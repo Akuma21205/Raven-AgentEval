@@ -1,0 +1,491 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AgentEval - Datasets Library</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: "#0B0F19",
+            primary: "#7C3AED",
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans"],
+            display: ["Plus Jakarta Sans"],
+            body: ["Plus Jakarta Sans"],
+            label: ["Plus Jakarta Sans"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #080B16;
+      color: #E2E8F0;
+    }
+    /* Ambient glowing violet / indigo ribbon gradient */
+    .aurora-bg {
+      background: radial-gradient(circle at 18% 12%, rgba(124, 58, 237, 0.18) 0%, transparent 45%),
+                  radial-gradient(circle at 85% 30%, rgba(99, 102, 241, 0.14) 0%, transparent 50%),
+                  radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 45%),
+                  #080B16;
+    }
+  </style>
+</head>
+<body class="aurora-bg min-h-screen text-slate-100 flex flex-col antialiased selection:bg-purple-600/30 selection:text-white">
+<!-- Fixed Left Sidebar (SideNavBar Anchor) -->
+<aside class="fixed top-0 left-0 h-screen w-64 flex flex-col z-30 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-r border-white/10 shadow-2xl">
+<div class="h-full flex flex-col justify-between p-4">
+<!-- Top Group -->
+<div class="space-y-5">
+<!-- Logo & Brand -->
+<div class="flex items-center gap-3 px-2 pt-1">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-purple-500/25 border border-white/20">
+<span class="material-symbols-outlined text-white text-xl" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline text-lg font-bold tracking-tight text-white">AgentEval</span>
+<span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">v2</span>
+</div>
+<p class="font-body text-xs text-slate-400">AI Benchmarking Platform</p>
+</div>
+</div>
+<!-- Action Button (CTA) -->
+<div class="px-1">
+<button class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-500 hover:from-purple-500 hover:to-indigo-500 text-white font-medium text-sm py-2.5 px-4 rounded-xl shadow-lg shadow-purple-600/30 border border-purple-400/30 flex items-center justify-center gap-2 transition-all duration-200 transform hover:-translate-y-0.5">
+<span class="material-symbols-outlined text-sm font-semibold" data-icon="add">add</span>
+<span>New Experiment</span>
+</button>
+</div>
+<!-- Navigation Links -->
+<nav class="space-y-1">
+<!-- Overview -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- Benchmarks -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="tune">tune</span>
+<span>Benchmarks</span>
+</a>
+<!-- Runs & Evals -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="experiment">experiment</span>
+<span>Runs &amp; Evals</span>
+</a>
+<!-- Models -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="smart_toy">smart_toy</span>
+<span>Models</span>
+</a>
+<!-- Datasets (Active Route) -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-white bg-white/10 shadow-sm border border-white/10" href="#">
+<span class="material-symbols-outlined text-lg text-purple-400" data-icon="dataset" data-weight="fill" style="font-variation-settings: 'FILL' 1;">dataset</span>
+<span>Datasets</span>
+</a>
+<!-- Traces -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="account_tree">account_tree</span>
+<span>Traces</span>
+</a>
+<!-- Compare -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="compare_arrows">compare_arrows</span>
+<span>Compare</span>
+</a>
+<!-- Playground -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="terminal">terminal</span>
+<span>Playground</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Group / Usage & Footer Actions -->
+<div class="space-y-4 pt-4 border-t border-white/10">
+<!-- Pro Plan Usage card -->
+<div class="p-3 rounded-xl bg-white/[0.04] border border-white/5">
+<div class="flex items-center justify-between text-xs mb-1.5 font-medium">
+<span class="text-slate-300">Monthly Usage</span>
+<span class="text-purple-300 font-semibold">4.2K / 10K</span>
+</div>
+<div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full w-[42%]"></div>
+</div>
+<p class="text-[11px] text-slate-400 mt-2 flex items-center justify-between">
+<span>Pro Plan Tier</span>
+<a class="text-purple-400 hover:text-purple-300 transition-colors" href="#">Manage</a>
+</p>
+</div>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="menu_book">menu_book</span>
+<span>Documentation</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="headset_mic">headset_mic</span>
+<span>Support</span>
+</a>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main View Container with TopAppBar Anchor -->
+<div class="flex-1 ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar Header (Matching shared components) -->
+<header class="sticky top-0 z-20 bg-surface/60 dark:bg-surface/60 backdrop-blur-md border-b border-white/10 shadow-sm flex justify-between items-center px-8 py-3.5 w-full">
+<!-- Search on Left -->
+<div class="relative w-96">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+<span class="material-symbols-outlined text-lg" data-icon="search">search</span>
+</div>
+<input class="w-full pl-10 pr-12 py-2 bg-slate-900/60 border border-white/10 rounded-xl text-sm placeholder-slate-400 text-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all backdrop-blur-sm" placeholder="Search datasets, test cases, tags... (⌘K)" type="text">
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+<kbd class="px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 bg-white/10 rounded border border-white/10">⌘K</kbd>
+</div>
+</div>
+<!-- Trailing Action Cluster -->
+<div class="flex items-center gap-3">
+<!-- Notification Button -->
+<button class="relative p-2 text-neutral-400 hover:text-white hover:bg-white/5 transition-colors rounded-lg">
+<span class="material-symbols-outlined text-xl" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-purple-500 ring-2 ring-slate-900"></span>
+</button>
+<!-- Help Button -->
+<button class="p-2 text-neutral-400 hover:text-white hover:bg-white/5 transition-colors rounded-lg">
+<span class="material-symbols-outlined text-xl" data-icon="help_outline">help_outline</span>
+</button>
+<!-- Divider -->
+<div class="h-6 w-px bg-white/10 mx-1"></div>
+<!-- User Profile Dropdown -->
+<div class="flex items-center gap-3 pl-1 pr-2 py-1 rounded-xl hover:bg-white/5 cursor-pointer transition-colors border border-transparent hover:border-white/5">
+<img class="w-8 h-8 rounded-full object-cover border border-purple-400/40 shadow-sm" data-alt="Modern professional portrait of a senior machine learning engineer with glasses in ambient violet and dark cybernetic studio lighting, focused expression with a soft confident smile, clean high tech corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF92E56tmru3ny9JQrgpbBoUWqageJ7EKmGMmVhpD7UVEMVk72qJCN30boU_mmNlPPvuKHl0zyD9fL6ssaQc1kDvSgRFvgaET8NLMxTbJVqfUi_dOE-TsRJFvNam5VE8IFkEd_j536SM8dyuRHDyq6Z38bnmu3Wtu-5Ea0xPqQ5zPhopyivTzDU2TpG_29AVbPTacRe4BIXRcBuhmMkg1FG8CsSVCUR63IZMObfL2HaLnVsckvr8aF5DJol4saFtd9RZcxqWD__6w">
+<div class="text-left hidden sm:block">
+<div class="text-sm font-semibold text-white tracking-tight leading-none">Shashank</div>
+<div class="text-[11px] text-slate-400 font-medium leading-tight mt-0.5">Senior ML Eng</div>
+</div>
+<span class="material-symbols-outlined text-sm text-slate-400" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</header>
+<!-- Page Content Main Area -->
+<main class="flex-1 px-8 py-8 max-w-7xl w-full mx-auto space-y-7">
+<!-- Breadcrumb & Header Section -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<div>
+<nav class="flex items-center gap-2 text-xs text-slate-400 mb-1.5">
+<span class="hover:text-slate-200 cursor-pointer">Datasets</span>
+<span class="material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span>
+<span class="text-purple-400 font-medium">All</span>
+</nav>
+<h1 class="text-3xl font-bold tracking-tight text-white font-headline">Datasets</h1>
+<p class="text-slate-400 text-sm mt-1">Manage your evaluation datasets.</p>
+</div>
+<!-- Primary Action Cluster -->
+<div class="flex items-center gap-3">
+<button class="px-3.5 py-2 rounded-xl text-sm font-medium text-slate-300 bg-white/5 hover:bg-white/10 hover:text-white border border-white/10 backdrop-blur-md transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-base" data-icon="file_upload">file_upload</span>
+<span>Import</span>
+</button>
+<button class="bg-[#7C3AED] hover:bg-[#6D28D9] shadow-lg shadow-violet-500/25 px-4 py-2 text-sm font-semibold text-white rounded-lg flex items-center gap-2 transition-all transform hover:-translate-y-0.5">
+<span class="material-symbols-outlined text-base font-bold" data-icon="add">add</span>
+<span>New Dataset</span>
+</button>
+</div>
+</div>
+<!-- Quick Metrics Ribbon (Glassmorphism Bento Insight) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="p-4 rounded-2xl border border-white/10 bg-[#0E1326]/60 backdrop-blur-xl shadow-lg flex items-center gap-4">
+<div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+<span class="material-symbols-outlined text-xl" data-icon="folder_copy">folder_copy</span>
+</div>
+<div>
+<div class="text-xs font-medium text-slate-400">Total Datasets</div>
+<div class="text-xl font-bold text-white tracking-tight mt-0.5">4 Available</div>
+</div>
+</div>
+<div class="p-4 rounded-2xl border border-white/10 bg-[#0E1326]/60 backdrop-blur-xl shadow-lg flex items-center gap-4">
+<div class="w-11 h-11 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400">
+<span class="material-symbols-outlined text-xl" data-icon="fact_check">fact_check</span>
+</div>
+<div>
+<div class="text-xs font-medium text-slate-400">Total Test Cases</div>
+<div class="text-xl font-bold text-white tracking-tight mt-0.5">600 Scenarios</div>
+</div>
+</div>
+<div class="p-4 rounded-2xl border border-white/10 bg-[#0E1326]/60 backdrop-blur-xl shadow-lg flex items-center gap-4">
+<div class="w-11 h-11 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+<span class="material-symbols-outlined text-xl" data-icon="verified">verified</span>
+</div>
+<div>
+<div class="text-xs font-medium text-slate-400">Evaluations Run</div>
+<div class="text-xl font-bold text-white tracking-tight mt-0.5">142 Completed</div>
+</div>
+</div>
+<div class="p-4 rounded-2xl border border-white/10 bg-[#0E1326]/60 backdrop-blur-xl shadow-lg flex items-center gap-4">
+<div class="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+<span class="material-symbols-outlined text-xl" data-icon="sync">sync</span>
+</div>
+<div>
+<div class="text-xs font-medium text-slate-400">Last Synced</div>
+<div class="text-xl font-bold text-white tracking-tight mt-0.5">2 hours ago</div>
+</div>
+</div>
+</div>
+<!-- Datasets Table / List Glassmorphic Card -->
+<div class="rounded-2xl border border-white/10 bg-[#0E1326]/70 backdrop-blur-xl shadow-2xl overflow-hidden">
+<!-- Table Control & Filter Header -->
+<div class="p-5 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<!-- Search within datasets -->
+<div class="relative w-full sm:w-80">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<span class="material-symbols-outlined text-base" data-icon="filter_list">filter_list</span>
+</span>
+<input class="w-full pl-9 pr-3 py-2 bg-slate-900/50 border border-white/10 rounded-xl text-xs placeholder-slate-400 text-slate-200 focus:outline-none focus:ring-1 focus:ring-purple-500" placeholder="Filter by name, tags..." type="text">
+</div>
+<!-- Category Filter Pills & Sort Options -->
+<div class="flex items-center gap-3 overflow-x-auto pb-1 sm:pb-0">
+<div class="flex items-center bg-slate-900/60 p-1 rounded-xl border border-white/10 text-xs">
+<button class="px-3 py-1.5 rounded-lg bg-purple-600/30 text-white font-medium shadow-sm border border-purple-500/30">All</button>
+<button class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-colors">Customer Support</button>
+<button class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-colors">E-commerce</button>
+<button class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-colors">Tool Use</button>
+<button class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-colors">General</button>
+</div>
+<!-- Sort By Selector -->
+<button class="flex items-center gap-2 px-3 py-2 bg-slate-900/60 border border-white/10 rounded-xl text-xs font-medium text-slate-300 hover:text-white transition-colors whitespace-nowrap">
+<span class="material-symbols-outlined text-sm text-slate-400" data-icon="swap_vert">swap_vert</span>
+<span>Sort: Date (Newest)</span>
+</button>
+</div>
+</div>
+<!-- Table View -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-white/10 bg-white/[0.02] text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+<th class="py-3.5 px-6">Dataset Name</th>
+<th class="py-3.5 px-6">Description &amp; Test Cases</th>
+<th class="py-3.5 px-6">Tag / Category</th>
+<th class="py-3.5 px-6">Created / Updated</th>
+<th class="py-3.5 px-6 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5 text-sm">
+<!-- Row 1: support-100 -->
+<tr class="hover:bg-white/[0.03] transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 shrink-0 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-lg" data-icon="database">database</span>
+</div>
+<div>
+<div class="font-semibold text-white group-hover:text-purple-300 transition-colors font-headline">support-100</div>
+<div class="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+<span>Active benchmark</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="text-sm font-medium text-slate-200">100 test cases</div>
+<div class="text-xs text-slate-400">Customer support queries</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                    Customer Support
+                  </span>
+</td>
+<td class="py-4 px-6 text-slate-400 text-sm">
+                  Sep 10, 2026
+                </td>
+<td class="py-4 px-6 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 border border-purple-500/30 text-xs font-medium transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="play_arrow">play_arrow</span>
+<span>View / Run Eval</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: ecom-cases -->
+<tr class="hover:bg-white/[0.03] transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center text-cyan-400 shrink-0 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-lg" data-icon="database">database</span>
+</div>
+<div>
+<div class="font-semibold text-white group-hover:text-cyan-300 transition-colors font-headline">ecom-cases</div>
+<div class="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+<span>Product recommendations</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="text-sm font-medium text-slate-200">250 test cases</div>
+<div class="text-xs text-slate-400">E-commerce scenarios</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    E-commerce
+                  </span>
+</td>
+<td class="py-4 px-6 text-slate-400 text-sm">
+                  Sep 5, 2026
+                </td>
+<td class="py-4 px-6 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: tool-use -->
+<tr class="hover:bg-white/[0.03] transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-lg" data-icon="database">database</span>
+</div>
+<div>
+<div class="font-semibold text-white group-hover:text-purple-300 transition-colors font-headline">tool-use</div>
+<div class="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+<span>Function call &amp; API parsing</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="text-sm font-medium text-slate-200">150 test cases</div>
+<div class="text-xs text-slate-400">Tool calling scenarios</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                    Tool Use
+                  </span>
+</td>
+<td class="py-4 px-6 text-slate-400 text-sm">
+                  Aug 28, 2026
+                </td>
+<td class="py-4 px-6 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: edge-cases -->
+<tr class="hover:bg-white/[0.03] transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-slate-700/20 border border-slate-600/30 flex items-center justify-center text-slate-400 shrink-0 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-lg" data-icon="database">database</span>
+</div>
+<div>
+<div class="font-semibold text-white group-hover:text-slate-200 transition-colors font-headline">edge-cases</div>
+<div class="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+<span>Red teaming &amp; boundary checks</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="text-sm font-medium text-slate-200">100 test cases</div>
+<div class="text-xs text-slate-400">Adversarial &amp; edge cases</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-500/10 text-slate-400 border border-slate-500/20">
+                    General
+                  </span>
+</td>
+<td class="py-4 px-6 text-slate-400 text-sm">
+                  Aug 20, 2026
+                </td>
+<td class="py-4 px-6 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination & Count Summary -->
+<div class="p-4 border-t border-white/10 bg-white/[0.01] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-400">
+<div class="flex items-center gap-2">
+<span>Showing <span class="text-white font-medium">4</span> of <span class="text-white font-medium">4</span> datasets</span>
+<span class="text-slate-600">•</span>
+<span><span class="text-purple-300 font-semibold">600</span> total test cases</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 rounded-md bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none transition-colors" disabled="">
+              Previous
+            </button>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 rounded bg-purple-600/30 text-purple-300 font-semibold border border-purple-500/30 flex items-center justify-center">1</button>
+</div>
+<button class="px-2.5 py-1 rounded-md bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none transition-colors" disabled="">
+              Next
+            </button>
+</div>
+</div>
+</div>
+<!-- Secondary Info Banner: Dataset Schema & Sync Helper -->
+<div class="p-5 rounded-2xl border border-white/10 bg-gradient-to-r from-purple-950/30 via-[#0E1326]/60 to-indigo-950/20 backdrop-blur-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+<div class="flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-300 shrink-0">
+<span class="material-symbols-outlined text-lg" data-icon="schema">schema</span>
+</div>
+<div>
+<h4 class="text-sm font-semibold text-white">Need to benchmark external production traces?</h4>
+<p class="text-xs text-slate-400 mt-0.5">Easily convert LangSmith, Phoenix, or OpenTelemetry traces directly into AgentEval evaluation sets.</p>
+</div>
+</div>
+<button class="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs font-semibold border border-white/10 transition-colors whitespace-nowrap">
+          View Sync Guide →
+        </button>
+</div>
+</main>
+</div>
+</body></html>

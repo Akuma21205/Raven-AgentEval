@@ -1,0 +1,691 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AgentEval - Trace Viewer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            midnight: '#090D1A',
+            deepspace: '#060913',
+            surface: {
+              DEFAULT: '#0E1528',
+              card: 'rgba(16, 23, 42, 0.72)',
+              active: 'rgba(30, 41, 69, 0.85)'
+            },
+            accent: {
+              purple: '#7C3AED',
+              indigo: '#6366F1',
+              cyan: '#06B6D4',
+              emerald: '#10B981',
+              amber: '#F59E0B',
+              coral: '#EF4444'
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Plus Jakarta Sans", "sans-serif"],
+            label: ["Plus Jakarta Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #090D1A;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #E2E8F0;
+      overflow-x: hidden;
+    }
+    
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+
+    .aurora-glow-1 {
+      position: absolute;
+      top: -10%;
+      left: 20%;
+      width: 650px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, rgba(99, 102, 241, 0.08) 50%, rgba(9, 13, 26, 0) 75%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .aurora-glow-2 {
+      position: absolute;
+      bottom: 5%;
+      right: 10%;
+      width: 550px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.14) 0%, rgba(124, 58, 237, 0.08) 45%, rgba(9, 13, 26, 0) 70%);
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glass-card {
+      background: rgba(15, 22, 41, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-card-interactive {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card-interactive:hover {
+      background: rgba(22, 32, 59, 0.8);
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(10, 15, 30, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(124, 58, 237, 0.5);
+    }
+  </style>
+</head>
+<body class="bg-[#090D1A] min-h-screen text-slate-200 antialiased selection:bg-purple-600/40 selection:text-white">
+<!-- Background Ambience -->
+<div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+<div class="aurora-glow-1"></div>
+<div class="aurora-glow-2"></div>
+<div class="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:24px_24px] opacity-40"></div>
+</div>
+<!-- Shared Component: SideNavBar -->
+<aside class="fixed top-0 left-0 h-screen w-64 flex flex-col z-30 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-r border-white/10 shadow-2xl">
+<div class="h-full flex flex-col justify-between p-4">
+<!-- Brand & Top Segment -->
+<div class="space-y-6">
+<!-- Logo -->
+<div class="flex items-center gap-3 px-2 pt-2">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 flex items-center justify-center">
+<div class="w-full h-full bg-[#0E1528] rounded-[11px] flex items-center justify-center">
+<span class="material-symbols-outlined text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-300" style="font-size: 22px;">smart_toy</span>
+</div>
+</div>
+<div>
+<div class="font-headline text-lg font-bold tracking-tight text-white flex items-center gap-1.5">
+              AgentEval
+              <span class="inline-flex items-center px-1.5 py-0.2 text-[10px] font-semibold text-purple-300 bg-purple-500/20 border border-purple-500/30 rounded">v2</span>
+</div>
+<p class="text-xs text-neutral-400 font-body">AI Benchmarking Platform</p>
+</div>
+</div>
+<!-- Action Button -->
+<div class="px-1">
+<button class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#7C3AED] to-[#6366F1] shadow-lg shadow-purple-600/30 hover:shadow-purple-600/50 hover:brightness-110 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-base">add</span>
+            New Experiment
+          </button>
+</div>
+<!-- Nav Items -->
+<nav class="space-y-1">
+<!-- Overview -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+            Overview
+          </a>
+<!-- Benchmarks -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">tune</span>
+            Benchmarks
+          </a>
+<!-- Runs & Evals (ACTIVE - Semantic Anchor for Trace Analysis) -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-white bg-white/10 shadow-sm border border-white/10" href="#">
+<span class="material-symbols-outlined text-xl text-purple-400" style="font-variation-settings: 'FILL' 1;">experiment</span>
+            Runs &amp; Evals
+            <span class="ml-auto w-1.5 h-1.5 rounded-full bg-purple-400 shadow-sm shadow-purple-400"></span>
+</a>
+<!-- Models -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">smart_toy</span>
+            Models
+          </a>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+            Settings
+          </a>
+</nav>
+</div>
+<!-- Footer Nav Cluster -->
+<div class="pt-4 border-t border-white/10 space-y-1">
+<a class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">menu_book</span>
+          Documentation
+        </a>
+<a class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">headset_mic</span>
+          Support
+        </a>
+<!-- System Node Monitor Capsule -->
+<div class="mt-4 p-3 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between text-xs text-neutral-400">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span>Cluster us-east-1</span>
+</div>
+<span class="text-neutral-500 font-mono">99.98%</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Container (Offset by 16rem for SideNav) -->
+<div class="w-[calc(100%-16rem)] ml-auto min-h-screen flex flex-col relative z-10">
+<!-- Shared Component: TopNavBar -->
+<header class="sticky top-0 right-0 z-20 w-full bg-surface/60 dark:bg-surface/60 backdrop-blur-md border-b border-white/10 shadow-sm">
+<div class="flex justify-between items-center px-8 py-3.5 w-full">
+<!-- Search Bar (on_left) -->
+<div class="relative w-96 max-w-md">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 text-lg pointer-events-none">search</span>
+<input class="w-full pl-10 pr-12 py-1.5 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder-neutral-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all font-body" placeholder="Search traces, spans, tools, status..." type="text">
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-white/10 text-neutral-400 border border-white/10">⌘K</span>
+</div>
+<!-- Trailing Actions & User Profile -->
+<div class="flex items-center gap-4">
+<!-- Trailing icons -->
+<button class="p-2 text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors relative" title="Notifications">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-purple-500 rounded-full ring-2 ring-[#090D1A]"></span>
+</button>
+<button class="p-2 text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors" title="Help &amp; Docs">
+<span class="material-symbols-outlined text-xl">help_outline</span>
+</button>
+<div class="h-5 w-px bg-white/10"></div>
+<!-- User Profile Profile pill -->
+<div class="flex items-center gap-3 pl-1">
+<div class="w-8 h-8 rounded-full ring-1 ring-purple-500/40 p-0.5 bg-gradient-to-tr from-purple-500 to-cyan-400">
+<img alt="Shashank user profile avatar" class="w-full h-full object-cover rounded-full" data-alt="A portrait avatar of Shashank, a senior software machine learning architect, smiling against a dark indigo studio background with warm subtle cyan rim lighting, high aesthetic modern tech executive." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXNDZgo0f0LwxWeH-rV9ZrLymEiqI-r6f8CejnxTtlv4W1-ILTLtAhx9GgYMTHFbDfBYjUmYztsJjYTmeN_8_yjlNsgLih2RuL9bfVmG27Wt8X8RmOO3g5ozrVpgIg6_LUrNDyyUWyn8C1EnYGHnAnkdUmbKWtn58KFu5mD1Bp00nBa5agGsvZDlnBz7Q6dZ4jXWIE7VpTS_0QI__KmMEvwlsEco406CJeBDq94jHohk_hCBMS17pkITWRWWFnv1mV9PiC4_d9u4U">
+</div>
+<div class="flex flex-col text-left">
+<span class="text-sm font-medium text-white leading-tight">Shashank</span>
+<span class="text-[11px] text-neutral-400 leading-none">Senior ML Eng</span>
+</div>
+<span class="material-symbols-outlined text-neutral-400 text-sm">expand_more</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Workspace -->
+<main class="flex-1 px-8 py-6 pb-28 space-y-6">
+<!-- Breadcrumbs & Trace Title Bar -->
+<div class="flex flex-col gap-3">
+<!-- Breadcrumb row -->
+<div class="flex items-center gap-2 text-xs text-neutral-400 font-medium">
+<a class="hover:text-purple-300 transition-colors" href="#">Experiments</a>
+<span class="material-symbols-outlined text-xs text-neutral-600">chevron_right</span>
+<a class="hover:text-purple-300 transition-colors" href="#">customer-support-v1.3.0</a>
+<span class="material-symbols-outlined text-xs text-neutral-600">chevron_right</span>
+<a class="hover:text-purple-300 transition-colors" href="#">Traces</a>
+<span class="material-symbols-outlined text-xs text-neutral-600">chevron_right</span>
+<span class="text-purple-300 font-mono bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">trace-9842f1</span>
+</div>
+<!-- Title and Quick Action Cluster -->
+<div class="flex flex-wrap items-center justify-between gap-4">
+<!-- Title & Badges -->
+<div class="flex items-center gap-3.5">
+<h1 class="font-headline text-2xl font-bold tracking-tight text-white">
+              Trace: Can I get a refund for my order?
+            </h1>
+<!-- Success Pill Badge -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-semibold shadow-sm shadow-emerald-500/10">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
+<span class="w-1.5 h-1.5 -ml-3 rounded-full bg-emerald-400"></span>
+              Success
+            </div>
+<!-- Latency Tag -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-neutral-300 text-xs font-mono">
+<span class="material-symbols-outlined text-xs text-neutral-400">timer</span>
+              2.8s
+            </div>
+<!-- Cost Tag -->
+<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-neutral-300 text-xs font-mono">
+<span class="text-neutral-500">$</span>0.0042
+            </div>
+</div>
+<!-- Pagination & Trace Operations -->
+<div class="flex items-center gap-2.5">
+<!-- Pagination buttons -->
+<div class="flex items-center rounded-xl bg-white/5 p-0.5 border border-white/10">
+<button class="p-1.5 text-neutral-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors" title="Previous Trace">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<span class="text-xs px-2 text-neutral-400 font-mono">24 of 120</span>
+<button class="p-1.5 text-neutral-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors" title="Next Trace">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+<button class="flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-neutral-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all">
+<span class="material-symbols-outlined text-base">ios_share</span>
+              Export
+            </button>
+<button class="flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-white bg-purple-600/30 hover:bg-purple-600/40 border border-purple-500/40 rounded-xl transition-all shadow-sm shadow-purple-600/20">
+<span class="material-symbols-outlined text-base">replay</span>
+              Rerun Span
+            </button>
+</div>
+</div>
+</div>
+<!-- Full-Width Tabs & Inspection View Mode Row -->
+<div class="flex flex-wrap items-center justify-between border-b border-white/10 pb-0 gap-4">
+<!-- Left primary workflow tabs -->
+<div class="flex items-center gap-8 -mb-px">
+<button class="flex items-center gap-2 pb-3 text-sm font-semibold text-white border-b-2 border-purple-500 relative transition-all">
+<span class="material-symbols-outlined text-purple-400 text-lg">schema</span>
+            Trace Steps
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+</button>
+<button class="flex items-center gap-2 pb-3 text-sm font-medium text-neutral-400 hover:text-slate-200 border-b-2 border-transparent transition-all">
+<span class="material-symbols-outlined text-base">swap_horiz</span>
+            Input / Output
+          </button>
+<button class="flex items-center gap-2 pb-3 text-sm font-medium text-neutral-400 hover:text-slate-200 border-b-2 border-transparent transition-all">
+<span class="material-symbols-outlined text-base">construction</span>
+            Tool Calls
+            <span class="px-1.5 py-0.2 text-[10px] rounded-full bg-white/10 text-neutral-300 font-mono">1</span>
+</button>
+<button class="flex items-center gap-2 pb-3 text-sm font-medium text-neutral-400 hover:text-slate-200 border-b-2 border-transparent transition-all">
+<span class="material-symbols-outlined text-base">data_object</span>
+            Raw Trace
+          </button>
+</div>
+<!-- Right view toggles -->
+<div class="flex items-center gap-2 pb-2">
+<div class="flex items-center p-1 bg-white/[0.04] border border-white/10 rounded-xl">
+<button class="px-3 py-1 text-xs font-semibold rounded-lg bg-white/10 text-white shadow-sm transition-colors">
+              Formatted
+            </button>
+<button class="px-3 py-1 text-xs font-medium text-neutral-400 hover:text-white rounded-lg transition-colors">
+              JSON
+            </button>
+<button class="px-3 py-1 text-xs font-medium text-neutral-400 hover:text-white rounded-lg transition-colors">
+              Message View
+            </button>
+</div>
+<button class="p-1.5 px-2.5 flex items-center gap-1.5 text-xs text-neutral-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors" title="Copy raw payload">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+            Copy
+          </button>
+</div>
+</div>
+<!-- Two-Column Trace Debugger Interface -->
+<div class="grid grid-cols-12 gap-6 items-start">
+<!-- LEFT COLUMN (Timeline, ~40% width / 5 cols) -->
+<div class="col-span-12 lg:col-span-5 space-y-4">
+<div class="glass-card rounded-2xl p-5 border border-white/10 shadow-xl relative overflow-hidden">
+<!-- Header for Timeline -->
+<div class="flex items-center justify-between pb-4 border-b border-white/10">
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold uppercase tracking-wider text-neutral-400 font-headline">Execution Timeline</span>
+<span class="px-2 py-0.5 text-[10px] font-mono bg-purple-500/20 text-purple-300 rounded border border-purple-500/30">6 Spans</span>
+</div>
+<div class="flex items-center gap-1 text-xs text-neutral-400">
+<span class="material-symbols-outlined text-sm">tune</span>
+                Filter
+              </div>
+</div>
+<!-- Vertical Timeline Track -->
+<div class="relative pt-6 pb-2 space-y-6">
+<!-- Glow execution backbone -->
+<div class="absolute left-[19px] top-8 bottom-6 w-[2px] bg-gradient-to-b from-blue-500 via-cyan-400 via-emerald-400 to-purple-500 opacity-60"></div>
+<!-- Step 1: User Input -->
+<div class="relative flex items-start gap-4 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-[#0D152A] border-2 border-blue-500 flex items-center justify-center shrink-0 z-10 shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-blue-400 text-lg">person</span>
+</div>
+<div class="flex-1 glass-card p-3 rounded-xl border border-white/10 hover:border-blue-400/40 transition-colors">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-blue-400 flex items-center gap-1.5">
+                      User Input
+                    </span>
+<span class="text-[10px] font-mono text-neutral-400">0.0s</span>
+</div>
+<p class="text-xs text-neutral-200 mt-1 font-medium truncate">"Can I get a refund for my order?"</p>
+<div class="flex items-center gap-2 mt-2 text-[10px] text-neutral-400 font-mono">
+<span>tokens: 14</span>
+<span>•</span>
+<span>role: user</span>
+</div>
+</div>
+</div>
+<!-- Step 2: Agent Thought -->
+<div class="relative flex items-start gap-4 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-[#0D152A] border-2 border-cyan-400 flex items-center justify-center shrink-0 z-10 shadow-md shadow-cyan-400/20 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-cyan-300 text-lg">psychology</span>
+</div>
+<div class="flex-1 glass-card p-3 rounded-xl border border-white/10 hover:border-cyan-400/40 transition-colors">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
+                      Agent Thought
+                    </span>
+<span class="text-[10px] font-mono text-neutral-400">0.8s</span>
+</div>
+<p class="text-xs text-neutral-300 mt-1 italic line-clamp-1">"I need to check the order details..."</p>
+<div class="flex items-center gap-2 mt-2 text-[10px] text-neutral-400 font-mono">
+<span class="text-cyan-400">gpt-4o-mini</span>
+<span>•</span>
+<span>latency: 410ms</span>
+</div>
+</div>
+</div>
+<!-- Step 3: Tool Call -->
+<div class="relative flex items-start gap-4 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-[#0D152A] border-2 border-emerald-400 flex items-center justify-center shrink-0 z-10 shadow-md shadow-emerald-400/20 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-emerald-400 text-lg">build</span>
+</div>
+<div class="flex-1 glass-card p-3 rounded-xl border border-white/10 hover:border-emerald-400/40 transition-colors">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                      Tool Call
+                      <span class="px-1.5 py-0.2 text-[9px] bg-emerald-500/20 rounded text-emerald-300">execute</span>
+</span>
+<span class="text-[10px] font-mono text-neutral-400">1.2s</span>
+</div>
+<code class="block text-xs font-mono text-emerald-300 mt-1 bg-black/40 px-2 py-1 rounded truncate">get_order_details {"order_id": "12345"}</code>
+<div class="flex items-center gap-2 mt-2 text-[10px] text-neutral-400 font-mono">
+<span>status: 200 OK</span>
+<span>•</span>
+<span>latency: 240ms</span>
+</div>
+</div>
+</div>
+<!-- Step 4: Tool Result -->
+<div class="relative flex items-start gap-4 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-[#0D152A] border-2 border-cyan-500 flex items-center justify-center shrink-0 z-10 shadow-md shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-cyan-400 text-lg">database</span>
+</div>
+<div class="flex-1 glass-card p-3 rounded-xl border border-white/10 hover:border-cyan-400/40 transition-colors">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                      Tool Result
+                    </span>
+<span class="text-[10px] font-mono text-neutral-400">1.8s</span>
+</div>
+<p class="text-xs text-neutral-300 mt-1 line-clamp-1 font-mono text-[11px]">Order found: #12345, Status: delivered, Date: Sep 10, 2026</p>
+<div class="flex items-center gap-2 mt-2 text-[10px] text-neutral-400 font-mono">
+<span>payload: 184 bytes</span>
+<span>•</span>
+<span class="text-emerald-400">verified</span>
+</div>
+</div>
+</div>
+<!-- Step 5: Agent Thought -->
+<div class="relative flex items-start gap-4 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-[#0D152A] border-2 border-purple-400 flex items-center justify-center shrink-0 z-10 shadow-md shadow-purple-400/20 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-purple-300 text-lg">psychology</span>
+</div>
+<div class="flex-1 glass-card p-3 rounded-xl border border-white/10 hover:border-purple-400/40 transition-colors">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-purple-300 flex items-center gap-1.5">
+                      Agent Thought
+                    </span>
+<span class="text-[10px] font-mono text-neutral-400">2.1s</span>
+</div>
+<p class="text-xs text-neutral-300 mt-1 italic line-clamp-1">"The order was delivered. Check policy..."</p>
+<div class="flex items-center gap-2 mt-2 text-[10px] text-neutral-400 font-mono">
+<span>policy_match: 30_days</span>
+<span>•</span>
+<span>eligible: true</span>
+</div>
+</div>
+</div>
+<!-- Step 6: Final Response (ACTIVE STEP SELECTED) -->
+<div class="relative flex items-start gap-4 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 border-2 border-white flex items-center justify-center shrink-0 z-10 shadow-lg shadow-purple-500/40 scale-105 ring-4 ring-purple-500/25">
+<span class="material-symbols-outlined text-white text-lg">check_circle</span>
+</div>
+<div class="flex-1 glass-card p-3.5 rounded-xl border-2 border-purple-500 bg-purple-500/10 shadow-lg shadow-purple-500/10">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-white flex items-center gap-1.5">
+                      Final Response
+                      <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+</span>
+<span class="text-[10px] font-mono text-purple-300 font-semibold">2.8s</span>
+</div>
+<p class="text-xs text-slate-200 mt-1 font-medium line-clamp-1">"Here's your refund eligibility..."</p>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-purple-500/20 text-[10px] text-purple-200 font-mono">
+<span>score: 0.98 (Ground Truth)</span>
+<span class="text-emerald-300 font-semibold">PASSED</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Metrics Card -->
+<div class="glass-card rounded-2xl p-4 border border-white/10 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+<span class="material-symbols-outlined text-base">neurology</span>
+</div>
+<div>
+<p class="text-xs font-medium text-neutral-400">Total Tokens</p>
+<p class="text-sm font-bold text-white font-mono">842 <span class="text-[10px] font-normal text-neutral-400">(prompt: 312, completion: 530)</span></p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-xs text-neutral-400">Model</span>
+<p class="text-xs font-semibold text-white font-mono">gpt-4o-mini</p>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN (Step Detail Inspector, ~60% width / 7 cols) -->
+<div class="col-span-12 lg:col-span-7 space-y-5">
+<div class="glass-card rounded-2xl p-6 border border-white/10 shadow-2xl relative space-y-6">
+<!-- Inspector Header -->
+<div class="flex items-center justify-between pb-4 border-b border-white/10">
+<div class="flex items-center gap-3">
+<span class="px-2.5 py-1 rounded-lg bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs font-bold font-mono">STEP 6</span>
+<div>
+<h3 class="text-base font-bold text-white font-headline">Execution Trace Hierarchy</h3>
+<p class="text-xs text-neutral-400">Comprehensive input, internal reasoning, tool response &amp; model emission</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1.5 text-xs text-neutral-300 hover:text-white bg-white/5 border border-white/10 rounded-lg flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm">unfold_more</span>
+                  Expand All
+                </button>
+</div>
+</div>
+<!-- Block 1: User Prompt Bubble -->
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-neutral-400">
+<span class="font-semibold text-blue-400 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base">chat_bubble</span>
+                  User Prompt
+                </span>
+<span class="font-mono text-[11px] text-neutral-400">0.00s • 14 tokens</span>
+</div>
+<div class="p-4 rounded-xl bg-blue-950/20 border border-blue-500/25 text-sm text-slate-200">
+                "Can I get a refund for my order?"
+              </div>
+</div>
+<!-- Block 2: Agent Thought (Internal Reasoning) -->
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-neutral-400">
+<span class="font-semibold text-purple-300 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base">psychology</span>
+                  Agent Thought (Reasoning Engine)
+                </span>
+<span class="font-mono text-[11px] text-neutral-400">0.82s • temp: 0.2</span>
+</div>
+<div class="p-4 rounded-xl bg-purple-950/20 border border-purple-500/25 text-sm text-purple-100/90 relative overflow-hidden">
+<div class="absolute -right-10 -bottom-10 w-32 h-32 bg-purple-600/10 rounded-full blur-xl pointer-events-none"></div>
+<p class="italic">
+                  "The customer is inquiring about a refund for an unspecified order. I should check their most recent order details first using the customer ID in context to evaluate delivery date and refund eligibility before replying."
+                </p>
+</div>
+</div>
+<!-- Block 3: Tool Call (Monospace Code Styling) -->
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-neutral-400">
+<span class="font-semibold text-emerald-400 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base">terminal</span>
+                  Tool Call: <span class="font-mono font-bold">get_order_details</span>
+</span>
+<div class="flex items-center gap-2 font-mono text-[11px]">
+<span class="text-neutral-400">1.24s</span>
+<span class="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">240ms</span>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-[#080C17] border border-emerald-500/30 font-mono text-xs text-slate-300 shadow-inner overflow-x-auto">
+<div class="flex items-center justify-between text-[11px] text-neutral-400 pb-2 mb-2 border-b border-white/5">
+<span class="text-emerald-400 font-semibold">Function Call Payload</span>
+<button class="hover:text-white flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">copy_all</span>
+</button>
+</div>
+<pre class="text-emerald-300 leading-relaxed"><span class="text-purple-400">get_order_details</span>({
+  <span class="text-cyan-300">"order_id"</span>: <span class="text-amber-300">"12345"</span>,
+  <span class="text-cyan-300">"customer_id"</span>: <span class="text-amber-300">"cust_99812a"</span>,
+  <span class="text-cyan-300">"include_shipment_logs"</span>: <span class="text-indigo-300">true</span>
+})</pre>
+</div>
+</div>
+<!-- Block 4: Tool Result (Syntax Highlighted JSON) -->
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-neutral-400">
+<span class="font-semibold text-cyan-400 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base">data_object</span>
+                  Tool Result Payload
+                </span>
+<span class="font-mono text-[11px] text-neutral-400">1.80s • HTTP 200</span>
+</div>
+<div class="p-4 rounded-xl bg-[#080C17] border border-cyan-500/30 font-mono text-xs text-slate-300 shadow-inner overflow-x-auto">
+<div class="flex items-center justify-between text-[11px] text-neutral-400 pb-2 mb-2 border-b border-white/5">
+<span class="text-cyan-400 font-semibold">application/json</span>
+<span class="text-neutral-500">184 bytes</span>
+</div>
+<pre class="leading-relaxed"><span class="text-neutral-500">{</span>
+  <span class="text-cyan-300">"order_id"</span>: <span class="text-amber-300">"12345"</span>,
+  <span class="text-cyan-300">"status"</span>: <span class="text-emerald-400">"delivered"</span>,
+  <span class="text-cyan-300">"delivered_at"</span>: <span class="text-amber-300">"2026-09-10"</span>,
+  <span class="text-cyan-300">"items"</span>: <span class="text-neutral-500">[</span>
+    <span class="text-neutral-500">{</span> <span class="text-cyan-300">"sku"</span>: <span class="text-amber-300">"PRO-AURORA-V2"</span>, <span class="text-cyan-300">"qty"</span>: <span class="text-purple-300">1</span>, <span class="text-cyan-300">"price"</span>: <span class="text-purple-300">129.00</span> <span class="text-neutral-500">}</span>
+  <span class="text-neutral-500">]</span>,
+  <span class="text-cyan-300">"eligible_for_return"</span>: <span class="text-emerald-400">true</span>
+<span class="text-neutral-500">}</span></pre>
+</div>
+</div>
+<!-- Block 5: Final Response Box -->
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-neutral-400">
+<span class="font-semibold text-emerald-400 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base">check_circle</span>
+                  Final Synthesized Response
+                </span>
+<div class="flex items-center gap-2">
+<span class="font-mono text-[11px] text-neutral-400">2.84s • 68 tokens</span>
+<button class="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+                    Copy Response
+                  </button>
+</div>
+</div>
+<div class="p-5 rounded-xl bg-gradient-to-br from-emerald-950/20 via-surface/80 to-purple-950/20 border border-emerald-500/30 text-sm text-slate-100 space-y-3">
+<p class="leading-relaxed">
+                  Your order <span class="font-mono font-semibold text-cyan-300 bg-white/5 px-1.5 py-0.5 rounded">#12345</span> was delivered on <strong class="text-white">Sep 10, 2026</strong>. Based on our 30-day return policy, you are fully eligible for a complete refund.
+                </p>
+<div class="pt-2 border-t border-white/10 flex items-center justify-between">
+<p class="text-xs text-neutral-300 font-medium">Would you like me to initiate the refund process right now?</p>
+<span class="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Policy Compliant</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Playback Bar (Sticky Footer Scrubber) -->
+<div class="fixed bottom-0 right-0 w-[calc(100%-16rem)] z-30 bg-[#090D1A]/90 backdrop-blur-xl border-t border-white/10 px-8 py-3.5 shadow-2xl">
+<div class="flex items-center justify-between gap-6 max-w-7xl mx-auto">
+<!-- Left: Playback Controls -->
+<div class="flex items-center gap-3">
+<!-- Main Play Button -->
+<button class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-purple-600/30 hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<!-- Restart Button -->
+<button class="p-2 text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors" title="Restart Trace">
+<span class="material-symbols-outlined text-lg">restart_alt</span>
+</button>
+<!-- Speed Toggle -->
+<div class="flex items-center bg-white/5 border border-white/10 rounded-lg p-0.5 text-xs">
+<button class="px-2 py-1 rounded text-neutral-400 hover:text-white transition-colors">1x</button>
+<button class="px-2 py-1 rounded bg-purple-600 text-white font-semibold shadow-sm">2x</button>
+</div>
+</div>
+<!-- Center: Interactive Scrubber Progress Bar -->
+<div class="flex-1 flex items-center gap-4 max-w-2xl">
+<span class="text-xs font-mono text-purple-400 font-semibold min-w-[32px]">2.8s</span>
+<div class="relative flex-1 flex items-center group cursor-pointer py-2">
+<!-- Background Track -->
+<div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+<!-- Active purple progress fill (100% completed) -->
+<div class="h-full bg-gradient-to-r from-blue-500 via-cyan-400 via-emerald-400 to-purple-500 w-full relative rounded-full"></div>
+</div>
+<!-- Milestone Step Markers -->
+<div class="absolute inset-0 flex justify-between items-center pointer-events-none px-1">
+<span class="w-2 h-2 rounded-full bg-blue-400 ring-2 ring-[#090D1A]" title="0.0s User Input"></span>
+<span class="w-2 h-2 rounded-full bg-cyan-400 ring-2 ring-[#090D1A]" title="0.8s Thought"></span>
+<span class="w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#090D1A]" title="1.2s Tool Call"></span>
+<span class="w-2 h-2 rounded-full bg-cyan-400 ring-2 ring-[#090D1A]" title="1.8s Result"></span>
+<span class="w-2 h-2 rounded-full bg-purple-400 ring-2 ring-[#090D1A]" title="2.1s Thought"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-white ring-2 ring-purple-500 shadow-md shadow-purple-500" title="2.8s Final Response"></span>
+</div>
+<!-- Scrubber Handle at End -->
+<div class="absolute right-0 w-3.5 h-3.5 rounded-full bg-white shadow-lg shadow-purple-500 ring-4 ring-purple-600/40 group-hover:scale-125 transition-transform"></div>
+</div>
+<span class="text-xs font-mono text-neutral-400 min-w-[32px]">2.8s</span>
+</div>
+<!-- Right: Step Count & Total Latency Details -->
+<div class="flex items-center gap-4 text-xs font-mono">
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-white/5 rounded-lg border border-white/10 text-slate-300">
+<span class="text-neutral-400">Step</span>
+<span class="text-white font-bold">6</span>
+<span class="text-neutral-500">of</span>
+<span class="text-neutral-400">6</span>
+</div>
+<div class="text-right">
+<span class="text-neutral-400 block text-[10px] leading-none uppercase tracking-wider font-headline">Total Latency</span>
+<span class="text-emerald-400 font-bold text-xs">2,840ms</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

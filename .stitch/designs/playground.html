@@ -1,0 +1,464 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AgentEval - Agent Playground</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: "#0e1526",
+            primary: "#8B5CF6",
+            "primary-container": "#7C3AED",
+            "on-primary-container": "#FFFFFF"
+          },
+          borderRadius: {
+            DEFAULT: "0.5rem",
+            lg: "1rem",
+            xl: "1.5rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Plus Jakarta Sans", "sans-serif"],
+            label: ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #090D1A;
+      color: #E2E8F0;
+      overflow-x: hidden;
+    }
+    .aurora-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 18% 15%, rgba(124, 58, 237, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 85% 30%, rgba(99, 102, 241, 0.14) 0%, transparent 50%),
+        radial-gradient(circle at 50% 85%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.12) 0%, transparent 45%);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-[#090D1A] min-h-screen text-slate-200 antialiased selection:bg-purple-600/40 selection:text-white">
+<!-- Ambient Glowing Aurora Background -->
+<div class="aurora-bg"></div>
+<!-- App Wrapper -->
+<div class="relative z-10 flex min-h-screen w-full">
+<!-- ======================================================== -->
+<!-- LEFT SIDEBAR NAVIGATION (Shared Component Anchor)        -->
+<!-- ======================================================== -->
+<aside class="fixed top-0 left-0 h-screen w-64 flex flex-col z-30 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-r border-white/10 shadow-2xl">
+<div class="h-full flex flex-col justify-between p-4 custom-scrollbar overflow-y-auto">
+<!-- Top Section & Brand -->
+<div class="space-y-6">
+<div class="flex items-center justify-between px-2 pt-1">
+<div class="flex items-center gap-3">
+<div class="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-purple-600/30 ring-1 ring-white/20">
+<span class="material-symbols-outlined text-white text-xl">smart_toy</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline text-lg font-bold tracking-tight text-white">AgentEval</span>
+<span class="text-[10px] font-semibold bg-violet-500/20 text-violet-300 border border-violet-500/30 px-1.5 py-0.5 rounded">V2</span>
+</div>
+<p class="font-body text-xs text-slate-400 font-medium">AI Benchmarking Platform</p>
+</div>
+</div>
+</div>
+<!-- Primary CTA Button -->
+<div class="px-1">
+<button class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-medium text-sm shadow-lg shadow-purple-600/25 active:scale-[0.98] transition-all duration-150 group">
+<span class="material-symbols-outlined text-base transition-transform group-hover:rotate-90 duration-200">add</span>
+<span>New Experiment</span>
+</button>
+</div>
+<!-- Navigation Links -->
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">tune</span>
+<span>Benchmarks</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">experiment</span>
+<span>Runs &amp; Evals</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">smart_toy</span>
+<span>Models</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">database</span>
+<span>Datasets</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">account_tree</span>
+<span>Traces</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">compare_arrows</span>
+<span>Compare</span>
+</a>
+<!-- Active Navigation Item: Playground -->
+<a class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-violet-600/25 to-purple-600/10 border border-violet-500/30 shadow-sm shadow-purple-900/20" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg text-violet-400" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<span class="font-semibold text-white">Playground</span>
+</div>
+<span class="w-1.5 h-1.5 rounded-full bg-violet-400 shadow-sm shadow-violet-400"></span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</div>
+<!-- Footer / Pro Plan & Support -->
+<div class="pt-4 border-t border-white/5 space-y-3">
+<!-- Usage Plan Card -->
+<div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 relative overflow-hidden group">
+<div class="flex items-center justify-between text-xs mb-1.5">
+<span class="text-slate-300 font-medium">Pro Plan Credits</span>
+<span class="text-violet-400 font-semibold">4.2K / 10K</span>
+</div>
+<div class="w-full bg-black/40 rounded-full h-1.5 overflow-hidden">
+<div class="bg-gradient-to-r from-violet-500 to-cyan-400 h-1.5 rounded-full w-[42%]"></div>
+</div>
+<div class="flex items-center justify-between mt-2 pt-1 text-[11px] text-slate-500">
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span> us-east-1</span>
+<span class="text-violet-300 hover:underline cursor-pointer">Upgrade</span>
+</div>
+</div>
+<div class="space-y-0.5">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined text-base">menu_book</span>
+<span>Documentation</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined text-base">headset_mic</span>
+<span>Support</span>
+</a>
+</div>
+</div>
+</div>
+</aside>
+<!-- ======================================================== -->
+<!-- MAIN CONTENT CANVAS + TOP NAV WRAPPER                    -->
+<!-- ======================================================== -->
+<div class="flex-1 ml-64 min-w-0 flex flex-col">
+<!-- TopNavBar (Shared Component Anchor) -->
+<header class="sticky top-0 z-20 w-full bg-surface/60 dark:bg-surface/60 backdrop-blur-md border-b border-white/10 shadow-sm">
+<div class="flex justify-between items-center px-8 py-3.5 w-full">
+<!-- Search Bar (on_left) -->
+<div class="relative w-96 max-w-md">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full pl-10 pr-12 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/80 transition-all" placeholder="Search playground sessions, models, presets... (⌘K)" type="text">
+<div class="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center">
+<span class="text-[10px] font-medium bg-white/10 text-slate-400 px-1.5 py-0.5 rounded border border-white/5">⌘K</span>
+</div>
+</div>
+<!-- Trailing Actions & Shashank Profile -->
+<div class="flex items-center gap-3">
+<button class="relative p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" title="Notifications">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-violet-500 rounded-full ring-2 ring-[#090D1A]"></span>
+</button>
+<button class="p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" title="Help &amp; Docs">
+<span class="material-symbols-outlined text-xl">help_outline</span>
+</button>
+<div class="h-4 w-px bg-white/10 mx-1"></div>
+<!-- Profile User Action -->
+<div class="flex items-center gap-3 pl-1 pr-2 py-1 rounded-xl hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-white/10">
+<img alt="Shashank user profile avatar" class="w-8 h-8 rounded-full object-cover ring-1 ring-violet-500/50" data-alt="A refined photorealistic portrait of an Indian male machine learning engineer wearing glasses and a minimalist charcoal crewneck against a sleek dark studio backdrop with subtle blue rim lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdn6mmn6qMcEJiqvrpTnkYZNo3BSwK7gk9nBpqEpYwdCm7NepRhwKPuaduuRsCa-DNP4CzMqIWt0VZ1xIvHCwacma-5fVa8WT2MDvnawArLHKEAHlBHwKuYC9i5OOPPxlsQvLQIUNS3_hVLgB64Ic6fRN8QwfPaJkb_POSw0tvn6rfK-CqMBvNU1ZsKOCFqlQ_A3a7fMggGsLKJfCjd2BspCvbYQTu-6-4ys5Sl-IH9QMJXfy_raQJhji62JronsCJcjOkpbzLxlI">
+<div class="flex flex-col text-left">
+<span class="text-xs font-semibold text-white tracking-tight leading-tight">Shashank</span>
+<span class="text-[10px] text-slate-400 leading-tight">Senior ML Eng</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-sm">expand_more</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas Container -->
+<main class="flex-1 p-8 space-y-6 max-w-[1600px] w-full mx-auto">
+<!-- Breadcrumb & Header Row -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 text-xs font-medium text-slate-400 mb-1">
+<a class="hover:text-slate-300 transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-violet-400">Playground</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-slate-300">Interactive Session</span>
+</div>
+<div class="flex items-center gap-3">
+<h1 class="text-2xl lg:text-3xl font-bold font-headline text-white tracking-tight">Playground</h1>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Engine Ready
+              </span>
+</div>
+<p class="text-sm text-slate-400 mt-1">Test your agent with custom inputs in real-time, view intermediate chain-of-thought, and inspect tool executions.</p>
+</div>
+<!-- Auxiliary Header Controls -->
+<div class="flex items-center gap-2.5 flex-wrap">
+<!-- Environment Badge Switcher -->
+<div class="flex items-center bg-black/40 border border-white/10 rounded-xl p-1">
+<button class="px-3 py-1 text-xs font-medium rounded-lg bg-violet-600/30 text-violet-200 border border-violet-500/40 shadow-sm">
+                Production
+              </button>
+<button class="px-3 py-1 text-xs font-medium rounded-lg text-slate-400 hover:text-white transition-colors">
+                Staging
+              </button>
+</div>
+<!-- History Button -->
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-300 hover:text-white text-xs font-medium transition-all">
+<span class="material-symbols-outlined text-base">history</span>
+<span>History</span>
+</button>
+<!-- Reset Button -->
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-rose-500/10 hover:border-rose-500/30 text-slate-300 hover:text-rose-300 text-xs font-medium border border-white/10 transition-all">
+<span class="material-symbols-outlined text-base">restart_alt</span>
+<span>Reset Session</span>
+</button>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- TWO-PANEL INTERACTION WORKSPACE                         -->
+<!-- ======================================================== -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+<!-- LEFT PANEL: Input Configuration (~45% on desktop -> col-span-5) -->
+<div class="lg:col-span-5 flex flex-col">
+<div class="h-full flex flex-col justify-between rounded-2xl bg-surface/60 backdrop-blur-xl border border-white/10 p-6 shadow-2xl space-y-6">
+<div class="space-y-5">
+<!-- Card Header -->
+<div class="flex items-center justify-between pb-3 border-b border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-violet-400 text-lg">tune</span>
+<h2 class="text-sm font-semibold text-white tracking-wide">Agent Configuration</h2>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span>Ready</span>
+</div>
+</div>
+<!-- Select Agent Dropdown -->
+<div class="space-y-1.5">
+<label class="block text-xs font-medium text-slate-300">Select Agent</label>
+<div class="relative cursor-pointer group">
+<div class="w-full flex items-center justify-between p-3 rounded-xl bg-black/40 hover:bg-black/60 border border-white/10 group-hover:border-violet-500/50 transition-all">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-violet-500/20 text-violet-300 border border-violet-500/30 flex items-center justify-center font-bold text-xs">
+                          CS
+                        </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-semibold text-white">customer-support-v1.3.0</span>
+<span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-medium">gpt-4o</span>
+</div>
+<p class="text-[11px] text-slate-400">Temp: 0.2 • Max Tokens: 2,048 • Strict JSON</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">unfold_more</span>
+</div>
+</div>
+</div>
+<!-- Parameters & System Persona Quick Preview -->
+<div class="p-3 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
+<div class="flex items-center justify-between text-xs">
+<span class="text-slate-400 font-medium flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xs text-slate-500">description</span>
+                      Active System Persona
+                    </span>
+<button class="text-violet-400 hover:text-violet-300 text-[11px] font-medium">Edit Prompt</button>
+</div>
+<p class="text-xs text-slate-400 line-clamp-2 italic bg-black/20 p-2 rounded-lg border border-white/5">
+                    "You are the senior Customer Support Agent for NovaGear. Be cordial, concise, verify user receipts before issuing returns, and strictly adhere to the 30-day return policy..."
+                  </p>
+</div>
+<!-- Toggle: Show Traces & Intermediate Thoughts -->
+<div class="flex items-center justify-between p-3 rounded-xl bg-black/30 border border-white/10">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-400">
+<span class="material-symbols-outlined text-base">psychology</span>
+</div>
+<div>
+<div class="text-xs font-medium text-white">Show traces &amp; intermediate thoughts</div>
+<div class="text-[11px] text-slate-400">Stream reasoning tokens &amp; tool arguments</div>
+</div>
+</div>
+<!-- Switch Component -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-violet-600 peer-checked:to-purple-600 shadow-inner"></div>
+</label>
+</div>
+<!-- User Message Section -->
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<label class="block text-xs font-medium text-slate-300 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-slate-400 text-xs">chat_bubble</span>
+                      User Message
+                    </label>
+<span class="text-[11px] text-slate-500">Plain text / Multimodal</span>
+</div>
+<textarea class="w-full rounded-xl bg-black/40 border border-white/10 p-4 text-xs lg:text-sm text-white placeholder-slate-500 min-h-[170px] focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition-all resize-none shadow-inner" placeholder="Type your message here... e.g. I want to return a product I bought last week and check my refund status." rows="7"></textarea>
+</div>
+<!-- Prompt Suggestions Chips -->
+<div class="space-y-1.5">
+<span class="text-[11px] text-slate-400 font-medium">Prompt Presets:</span>
+<div class="flex flex-wrap gap-2">
+<button class="px-2.5 py-1 text-[11px] rounded-lg bg-white/[0.03] hover:bg-violet-600/20 hover:text-violet-200 border border-white/10 hover:border-violet-500/30 text-slate-300 transition-all flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-slate-400">bolt</span>
+                      Check return eligibility
+                    </button>
+<button class="px-2.5 py-1 text-[11px] rounded-lg bg-white/[0.03] hover:bg-violet-600/20 hover:text-violet-200 border border-white/10 hover:border-violet-500/30 text-slate-300 transition-all flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-slate-400">receipt_long</span>
+                      Order status check
+                    </button>
+<button class="px-2.5 py-1 text-[11px] rounded-lg bg-white/[0.03] hover:bg-rose-500/20 hover:text-rose-200 border border-white/10 hover:border-rose-500/30 text-slate-300 transition-all flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-rose-400">security</span>
+                      Red team prompt injection
+                    </button>
+</div>
+</div>
+</div>
+<!-- Footer Action Bar -->
+<div class="pt-4 border-t border-white/10 flex items-center justify-between">
+<div class="text-[11px] text-slate-400">
+<div class="flex items-center gap-2">
+<span class="text-slate-300 font-medium">Estimated tokens: ~180</span>
+<span>•</span>
+<span>Multi-turn</span>
+</div>
+</div>
+<button class="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-medium text-sm px-6 py-2.5 rounded-full shadow-lg shadow-purple-600/30 flex items-center gap-2 active:scale-95 transition-all">
+<span>Run</span>
+<span class="material-symbols-outlined text-base">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- RIGHT PANEL: Output & Traces (~55% on desktop -> col-span-7) -->
+<div class="lg:col-span-7 flex flex-col">
+<div class="h-full min-h-[580px] flex flex-col justify-between rounded-2xl bg-surface/60 backdrop-blur-xl border border-white/10 p-6 shadow-2xl relative overflow-hidden">
+<!-- Subtle Background Light Effect -->
+<div class="absolute -right-24 -top-24 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Top Panel Navigation Tabs -->
+<div class="flex items-center justify-between border-b border-white/10 pb-3 z-10">
+<div class="flex items-center gap-6">
+<!-- Active Tab: Response -->
+<button class="flex items-center gap-2 text-sm font-semibold text-white border-b-2 border-violet-500 pb-3 -mb-3 px-1 transition-all">
+<span class="material-symbols-outlined text-base text-violet-400">chat</span>
+<span>Response</span>
+</button>
+<button class="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white pb-3 -mb-3 px-1 transition-colors">
+<span class="material-symbols-outlined text-base">route</span>
+<span>Trace</span>
+</button>
+<button class="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white pb-3 -mb-3 px-1 transition-colors">
+<span class="material-symbols-outlined text-base">construction</span>
+<span>Tool Calls</span>
+<span class="text-[10px] px-1.5 py-0.2 rounded-full bg-white/10 text-slate-300 font-mono">0</span>
+</button>
+<button class="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white pb-3 -mb-3 px-1 transition-colors">
+<span class="material-symbols-outlined text-base">code</span>
+<span>Raw JSON</span>
+</button>
+</div>
+<!-- Auxiliary Toolbar Actions -->
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all" title="Copy response">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+<span>Copy</span>
+</button>
+<button class="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-all" title="Clear console">
+<span class="material-symbols-outlined text-sm">delete_sweep</span>
+<span>Clear Output</span>
+</button>
+</div>
+</div>
+<!-- Center Body: Sleek Futuristic Empty State -->
+<div class="flex-1 flex flex-col items-center justify-center text-center py-16 px-4 z-10">
+<!-- Glowing Agent Icon Container -->
+<div class="relative mb-6">
+<div class="w-24 h-24 rounded-3xl bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/10 flex items-center justify-center shadow-2xl relative overflow-hidden group">
+<div class="absolute inset-0 bg-violet-600/15 rounded-3xl blur-md"></div>
+<span class="material-symbols-outlined text-4xl text-slate-300 group-hover:text-violet-300 group-hover:scale-110 transition-all duration-300">smart_toy</span>
+</div>
+<!-- Floating Particle / Ring Dot -->
+<div class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-violet-500/20 border border-violet-400/40 flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-violet-400 shadow-sm shadow-violet-400"></div>
+</div>
+</div>
+<!-- Empty State Copy -->
+<h3 class="text-xl font-headline font-semibold text-white mb-2">Run your agent</h3>
+<p class="text-sm text-slate-400 max-w-md leading-relaxed mb-6">
+                  Enter a message on the left and execute to inspect real-time agent output, reasoning tokens, database lookups, and evaluation metrics.
+                </p>
+<!-- Keyboard Shortcut Helper -->
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/10 text-xs text-slate-400 shadow-inner">
+<span class="material-symbols-outlined text-xs text-violet-400">keyboard</span>
+<span>Press</span>
+<span class="px-1.5 py-0.5 rounded bg-white/10 text-slate-200 font-mono text-[11px] border border-white/10">⌘</span>
+<span>+</span>
+<span class="px-1.5 py-0.5 rounded bg-white/10 text-slate-200 font-mono text-[11px] border border-white/10">Enter</span>
+<span>to execute</span>
+</div>
+</div>
+<!-- Output Bottom Meta Bar (Status & Latency placeholders) -->
+<div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-500 z-10">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+<span>Status: Idle</span>
+</span>
+<span>Latency: -- ms</span>
+<span>TTFT: -- ms</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="hover:text-slate-400 cursor-pointer">Auto-scroll: ON</span>
+<span>•</span>
+<span class="text-violet-400/80 hover:text-violet-300 cursor-pointer">Live WebSocket connected</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

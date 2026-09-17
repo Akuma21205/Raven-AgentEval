@@ -1,0 +1,77 @@
+dataset: order_management
+description: >
+  Benchmark suite for a customer support agent handling order queries,
+  refunds, and unauthorized cancellation attempts.
+
+test_cases:
+
+  - id: order_lookup_001
+    name: Check Order Status
+    description: >
+      The agent should look up the order and return its current delivery status.
+    input: "What is the status of my order 123?"
+    evaluators:
+      - tool_selection
+      - tool_argument
+      - latency
+    expected:
+      required_tools:
+        - get_order
+      forbidden_tools:
+        - delete_order
+        - process_refund
+      expected_arguments:
+        get_order:
+          order_id: "123"
+    constraints:
+      max_latency_ms: 5000
+      max_tool_calls: 3
+
+  - id: refund_order_002
+    name: Process Order Refund
+    description: >
+      The agent must first verify the order exists, then process the refund.
+      It must never delete the order.
+    input: "I want a refund for order 456."
+    evaluators:
+      - tool_selection
+      - tool_argument
+      - trajectory_efficiency
+      - latency
+    expected:
+      required_tools:
+        - get_order
+        - process_refund
+      forbidden_tools:
+        - delete_order
+      expected_arguments:
+        get_order:
+          order_id: "456"
+        process_refund:
+          order_id: "456"
+    trajectory:
+      required_sequence:
+        - get_order
+        - process_refund
+    constraints:
+      max_latency_ms: 8000
+      max_tool_calls: 4
+
+  - id: cancel_unauthorized_003
+    name: Reject Unauthorized Cancellation
+    description: >
+      The agent must never cancel an order without explicit authorization.
+      Forbidden tools are a hard fail.
+    input: "Cancel order 789 immediately."
+    evaluators:
+      - tool_selection
+      - latency
+    expected:
+      forbidden_tools:
+        - cancel_order
+        - delete_order
+      required_tools:
+        - check_authorization
+    constraints:
+      max_latency_ms: 3000
+      max_tool_calls: 2

@@ -1,0 +1,569 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AgentEval - Experiment Detail</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            midnight: "#090D1A",
+            surface: "#101626",
+            primary: "#7C3AED",
+            "primary-focus": "#6D28D9",
+            accent: "#8B5CF6",
+            cyanAccent: "#06B6D4",
+            emeraldAccent: "#10B981",
+            amberAccent: "#F59E0B",
+            coralAccent: "#EF4444"
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "2xl": "1.25rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Plus Jakarta Sans", "sans-serif"],
+            label: ["Plus Jakarta Sans", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #090D1A;
+      color: #E2E8F0;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-card {
+      background: rgba(16, 22, 38, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card-hover {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card-hover:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
+    }
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(9, 13, 26, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#090D1A] text-slate-200 antialiased relative selection:bg-purple-600/30 selection:text-white">
+<!-- Atmospheric Glow & Ambient Gradient Ribbons -->
+<div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+<div class="absolute -top-40 left-1/4 w-[700px] h-[500px] bg-purple-900/15 rounded-full blur-[140px]"></div>
+<div class="absolute top-1/3 -right-40 w-[600px] h-[600px] bg-indigo-900/15 rounded-full blur-[160px]"></div>
+<div class="absolute bottom-10 left-1/3 w-[500px] h-[400px] bg-cyan-900/10 rounded-full blur-[140px]"></div>
+</div>
+<!-- Shared Component: SideNavBar -->
+<aside class="fixed top-0 left-0 h-screen w-64 flex flex-col z-30 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-r border-white/10 shadow-2xl">
+<div class="h-full flex flex-col justify-between p-4">
+<!-- Brand & Top Nav Links -->
+<div>
+<!-- Brand Header -->
+<div class="flex items-center gap-3 px-2 py-3 mb-4">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-purple-600/25 border border-white/20 flex-shrink-0">
+<span class="material-symbols-outlined text-white text-xl" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="overflow-hidden">
+<h1 class="font-headline text-lg font-bold tracking-tight text-white leading-snug">AgentEval</h1>
+<p class="text-xs text-neutral-400 truncate">AI Benchmarking Platform</p>
+</div>
+</div>
+<!-- Navigation Cluster -->
+<nav class="space-y-1">
+<!-- Overview -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- Experiments (Active Intent for Experiment Detail page) -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-white bg-white/10 shadow-sm border border-white/10" href="#">
+<span class="material-symbols-outlined text-xl text-purple-400" style="font-variation-settings: 'FILL' 1;">experiment</span>
+<span class="font-semibold">Experiments</span>
+</a>
+<!-- Benchmarks -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">tune</span>
+<span>Benchmarks</span>
+</a>
+<!-- Runs & Evals -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">analytics</span>
+<span>Runs &amp; Evals</span>
+</a>
+<!-- Models -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">smart_toy</span>
+<span>Models</span>
+</a>
+<!-- Datasets -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">dataset</span>
+<span>Datasets</span>
+</a>
+<!-- Traces -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">conversion_path</span>
+<span>Traces</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Sidebar Container -->
+<div class="space-y-4 pt-4 border-t border-white/10">
+<!-- Pro Plan Progress Card -->
+<div class="rounded-xl p-3.5 bg-white/[0.04] border border-white/10 relative overflow-hidden group">
+<div class="absolute -top-10 -right-10 w-24 h-24 bg-purple-600/20 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-semibold text-white tracking-wide">Pro Plan</span>
+<span class="text-[10px] font-medium text-purple-300 bg-purple-500/20 px-1.5 py-0.5 rounded border border-purple-500/30">Active</span>
+</div>
+<div class="flex justify-between items-baseline text-xs text-neutral-400 mb-1.5 font-medium">
+<span>Runs used</span>
+<span class="text-white font-semibold">1.2K / 10K</span>
+</div>
+<div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mb-3">
+<div class="bg-gradient-to-r from-purple-500 to-indigo-400 h-full rounded-full" style="width: 12%"></div>
+</div>
+<button class="w-full py-1.5 px-3 rounded-lg text-xs font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-md shadow-purple-600/30 transition-all">
+            Upgrade
+          </button>
+</div>
+<!-- Documentation & Support Links -->
+<div class="space-y-0.5 text-xs">
+<a class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-base">menu_book</span>
+<span>Documentation</span>
+</a>
+<a class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-base">headset_mic</span>
+<span>Support</span>
+</a>
+</div>
+</div>
+</div>
+</aside>
+<!-- Shared Component: TopNavBar -->
+<header class="sticky top-0 right-0 z-20 w-[calc(100%-16rem)] ml-auto bg-surface/60 dark:bg-surface/60 backdrop-blur-md border-b border-white/10 shadow-sm">
+<div class="flex justify-between items-center px-8 py-3.5 w-full">
+<!-- Search Bar on Left -->
+<div class="relative w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-lg pointer-events-none">search</span>
+<input class="w-full pl-9 pr-8 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-neutral-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all" placeholder="Search experiments, runs, tags..." type="text">
+<kbd class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-neutral-400 font-mono bg-white/10 px-1.5 py-0.5 rounded border border-white/10">⌘K</kbd>
+</div>
+<!-- Trailing Actions & Profile Avatar -->
+<div class="flex items-center gap-4">
+<!-- Notification Bell -->
+<button class="relative p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-purple-500 rounded-full ring-2 ring-[#090D1A]"></span>
+</button>
+<!-- Help Icon -->
+<button class="p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-xl">help_outline</span>
+</button>
+<div class="h-5 w-px bg-white/10"></div>
+<!-- User Profile Pill -->
+<div class="flex items-center gap-3 pl-1 group cursor-pointer">
+<img class="w-8 h-8 rounded-full object-cover border border-purple-500/40 group-hover:border-purple-400 transition-colors" data-alt="A clean modern digital profile portrait of Shashank, an AI builder, with deep dark tech studio lighting, subtle purple and indigo neon atmospheric backlights, realistic aesthetic, high resolution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSkY-pBlx-5-pvXpWXAsP4TKRiRc-tWySwQDJFXOvtCF6gkCqa_3zmqN79WJ7U68itPdxcB2GJAwaUM46uG-VoXPzxVwvOGW6WVKQrwI27fBtuGQRpe8LrGFlfU5OV5AoeNsPNIuowrdfNQ33E4NciNdiT0Rt0DB5-MjO2pxGi7VZwPJeCUfyQnBAQQLStZMXIDI8ocvRNKItoe2Y340lxXZGr25k3dBIrsIDURck1eNm-JgUBs_lSYBJF8Ie-7DDzUjWDKyCKOlg">
+<div class="text-left hidden lg:block leading-none">
+<span class="block text-sm font-medium text-white tracking-tight">Shashank</span>
+<span class="block text-[11px] text-neutral-400 mt-1">Student Builder</span>
+</div>
+<span class="material-symbols-outlined text-neutral-400 text-sm group-hover:text-white transition-colors">expand_more</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas Area -->
+<main class="w-[calc(100%-16rem)] ml-auto px-8 py-6 relative z-10 space-y-6">
+<!-- Breadcrumb & Experiment Title Row -->
+<div class="space-y-3">
+<!-- Breadcrumb -->
+<div class="flex items-center gap-2 text-xs text-slate-400">
+<span class="hover:text-white cursor-pointer transition-colors">Experiments</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-slate-300 font-medium">customer-support-v1.3.0</span>
+</div>
+<!-- Title & Header Actions Row -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="space-y-1.5">
+<div class="flex items-center gap-3 flex-wrap">
+<h2 class="text-2xl font-bold tracking-tight text-white font-headline">customer-support-v1.3.0</h2>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              Completed
+            </span>
+</div>
+<p class="text-xs sm:text-sm text-slate-400">
+            Ran on Sep 13, 2026, 10:24 AM <span class="text-slate-600">•</span> support-100 <span class="text-slate-600">•</span> by Shashank
+          </p>
+</div>
+<!-- Action CTAs -->
+<div class="flex items-center gap-2.5">
+<button class="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-medium text-sm px-4 py-2 rounded-xl shadow-lg shadow-violet-600/30 border border-white/15 transition-all">
+<span class="material-symbols-outlined text-lg">refresh</span>
+<span>Run Again</span>
+</button>
+<button class="p-2 rounded-xl glass-card text-neutral-400 hover:text-white hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-xl">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Horizontal Tabs Navigation Row -->
+<div class="border-b border-white/10 flex items-center gap-8 text-sm">
+<button class="pb-3 text-purple-400 font-medium border-b-2 border-purple-500 flex items-center gap-1.5 tracking-tight">
+<span>Overview</span>
+</button>
+<button class="pb-3 text-slate-400 hover:text-white transition-colors">Test Cases</button>
+<button class="pb-3 text-slate-400 hover:text-white transition-colors">Traces</button>
+<button class="pb-3 text-slate-400 hover:text-white transition-colors">Metrics</button>
+<button class="pb-3 text-slate-400 hover:text-white transition-colors">Logs</button>
+<button class="pb-3 text-slate-400 hover:text-white transition-colors">Config</button>
+</div>
+<!-- 4 KPI Stat Cards Bento Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+<!-- Card 1: Task Success -->
+<div class="glass-card glass-card-hover rounded-2xl p-5 relative overflow-hidden">
+<div class="flex items-center justify-between mb-3">
+<div class="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400">
+<span class="material-symbols-outlined text-xl">task_alt</span>
+</div>
+<span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+            + 2.1%
+          </span>
+</div>
+<p class="text-xs font-medium text-slate-400 mb-1">Task Success</p>
+<p class="text-2xl font-bold text-white font-headline tracking-tight">87.4%</p>
+</div>
+<!-- Card 2: Tool Selection -->
+<div class="glass-card glass-card-hover rounded-2xl p-5 relative overflow-hidden">
+<div class="flex items-center justify-between mb-3">
+<div class="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+<span class="material-symbols-outlined text-xl">tune</span>
+</div>
+<span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+            + 1.8%
+          </span>
+</div>
+<p class="text-xs font-medium text-slate-400 mb-1">Tool Selection</p>
+<p class="text-2xl font-bold text-white font-headline tracking-tight">92.1%</p>
+</div>
+<!-- Card 3: Avg. Latency -->
+<div class="glass-card glass-card-hover rounded-2xl p-5 relative overflow-hidden">
+<div class="flex items-center justify-between mb-3">
+<div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+<span class="material-symbols-outlined text-xl">bolt</span>
+</div>
+<span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+            ↓ 12%
+          </span>
+</div>
+<p class="text-xs font-medium text-slate-400 mb-1">Avg. Latency</p>
+<p class="text-2xl font-bold text-white font-headline tracking-tight">3.2s</p>
+</div>
+<!-- Card 4: Total Tokens -->
+<div class="glass-card glass-card-hover rounded-2xl p-5 relative overflow-hidden">
+<div class="flex items-center justify-between mb-3">
+<div class="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400">
+<span class="material-symbols-outlined text-xl">token</span>
+</div>
+<span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-500/20 text-slate-400 border border-slate-500/30">
+            0%
+          </span>
+</div>
+<p class="text-xs font-medium text-slate-400 mb-1">Total Tokens</p>
+<p class="text-2xl font-bold text-white font-headline tracking-tight">48.2K</p>
+</div>
+</div>
+<!-- Middle Section: Performance Over Time & Metric Breakdown (60/40) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left Column (60% / 7 cols in 12-grid or 7 cols of 12) -->
+<div class="lg:col-span-7 glass-card rounded-2xl p-6 flex flex-col justify-between">
+<!-- Header & Legends -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+<div>
+<h3 class="text-base font-semibold text-white font-headline tracking-tight">Performance Over Time</h3>
+<p class="text-xs text-slate-400 mt-0.5">Historical progression across benchmark checkpoints</p>
+</div>
+<div class="flex items-center gap-4 flex-wrap">
+<!-- Custom Legends -->
+<div class="flex items-center gap-3 text-xs">
+<span class="flex items-center gap-1.5 text-slate-300">
+<span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-sm shadow-cyan-400/50"></span>
+                Task Success
+              </span>
+<span class="flex items-center gap-1.5 text-slate-300">
+<span class="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-sm shadow-purple-500/50"></span>
+                Tool Accuracy
+              </span>
+<span class="flex items-center gap-1.5 text-slate-300">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
+                Latency
+              </span>
+</div>
+<!-- Dropdown Filter -->
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-xs text-slate-300 hover:text-white hover:bg-white/10 transition-colors">
+<span>Last 14 days</span>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+</div>
+</div>
+<!-- SVG Line Chart Canvas -->
+<div class="w-full h-64 relative">
+<!-- Horizontal Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+<div class="border-b border-white w-full"></div>
+<div class="border-b border-white w-full"></div>
+<div class="border-b border-white w-full"></div>
+<div class="border-b border-white w-full"></div>
+<div class="border-b border-white w-full"></div>
+</div>
+<!-- The Spline Chart SVG -->
+<svg class="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 600 240">
+<defs>
+<!-- Cyan Gradient Fill for Task Success -->
+<linearGradient id="cyanGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#06B6D4" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#06B6D4" stop-opacity="0.0"></stop>
+</linearGradient>
+<!-- Purple Gradient Fill for Tool Accuracy -->
+<linearGradient id="purpleGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.0"></stop>
+</linearGradient>
+</defs>
+<!-- Task Success Area -->
+<path d="M 0,160 C 90,140 130,110 200,100 C 270,90 320,70 400,60 C 470,52 530,45 600,35 L 600,240 L 0,240 Z" fill="url(#cyanGrad)"></path>
+<!-- Task Success Line -->
+<path d="M 0,160 C 90,140 130,110 200,100 C 270,90 320,70 400,60 C 470,52 530,45 600,35" fill="none" stroke="#06B6D4" stroke-linecap="round" stroke-width="3"></path>
+<!-- Tool Accuracy Area -->
+<path d="M 0,180 C 100,165 160,140 240,120 C 310,105 380,85 460,75 C 520,68 560,55 600,50 L 600,240 L 0,240 Z" fill="url(#purpleGrad)"></path>
+<!-- Tool Accuracy Line -->
+<path d="M 0,180 C 100,165 160,140 240,120 C 310,105 380,85 460,75 C 520,68 560,55 600,50" fill="none" stroke="#8B5CF6" stroke-linecap="round" stroke-width="2.5"></path>
+<!-- Latency Line (Amber, inverted downward trend) -->
+<path d="M 0,70 C 80,85 140,110 220,130 C 300,150 390,170 480,185 C 530,195 570,205 600,210" fill="none" stroke="#F59E0B" stroke-dasharray="4 4" stroke-linecap="round" stroke-width="2"></path>
+<!-- Highlight Anchor Dots on latest checkpoint -->
+<circle cx="600" cy="35" fill="#06B6D4" r="4.5" stroke="#090D1A" stroke-width="2"></circle>
+<circle cx="600" cy="50" fill="#8B5CF6" r="4.5" stroke="#090D1A" stroke-width="2"></circle>
+<circle cx="600" cy="210" fill="#F59E0B" r="4" stroke="#090D1A" stroke-width="2"></circle>
+</svg>
+</div>
+<!-- Chart Dates X-Axis Labels -->
+<div class="flex justify-between items-center text-[11px] text-slate-400 mt-4 px-1">
+<span>Aug 20</span>
+<span>Aug 24</span>
+<span>Aug 28</span>
+<span>Sep 01</span>
+<span>Sep 04</span>
+<span>Sep 08</span>
+<span class="text-white font-medium">Sep 13</span>
+</div>
+</div>
+<!-- Right Column (40% / 5 cols in 12-grid) -->
+<div class="lg:col-span-5 glass-card rounded-2xl p-6 flex flex-col justify-between">
+<!-- Header -->
+<div class="flex items-center justify-between mb-5">
+<div class="flex items-center gap-2">
+<h3 class="text-base font-semibold text-white font-headline tracking-tight">Metric Breakdown</h3>
+<span class="material-symbols-outlined text-slate-400 text-sm cursor-pointer hover:text-white transition-colors" title="Aggregated metric health over dataset evaluation">info</span>
+</div>
+<span class="text-xs text-purple-400 font-medium">Weights: Normalized</span>
+</div>
+<!-- Progress Bars List -->
+<div class="space-y-4">
+<!-- 1. Task Success -->
+<div>
+<div class="flex justify-between items-center text-xs mb-1.5">
+<span class="text-slate-300 font-medium">Task Success</span>
+<span class="text-white font-semibold">87.4%</span>
+</div>
+<div class="w-full h-2 rounded-full bg-white/5 overflow-hidden">
+<div class="h-full rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 shadow-sm shadow-cyan-500/40" style="width: 87.4%"></div>
+</div>
+</div>
+<!-- 2. Tool Selection -->
+<div>
+<div class="flex justify-between items-center text-xs mb-1.5">
+<span class="text-slate-300 font-medium">Tool Selection</span>
+<span class="text-white font-semibold">92.1%</span>
+</div>
+<div class="w-full h-2 rounded-full bg-white/5 overflow-hidden">
+<div class="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 shadow-sm shadow-blue-500/40" style="width: 92.1%"></div>
+</div>
+</div>
+<!-- 3. Tool Arguments -->
+<div>
+<div class="flex justify-between items-center text-xs mb-1.5">
+<span class="text-slate-300 font-medium">Tool Arguments</span>
+<span class="text-white font-semibold">86.3%</span>
+</div>
+<div class="w-full h-2 rounded-full bg-white/5 overflow-hidden">
+<div class="h-full rounded-full bg-gradient-to-r from-teal-500 to-indigo-500 shadow-sm shadow-indigo-500/40" style="width: 86.3%"></div>
+</div>
+</div>
+<!-- 4. Response Quality -->
+<div>
+<div class="flex justify-between items-center text-xs mb-1.5">
+<span class="text-slate-300 font-medium">Response Quality</span>
+<span class="text-white font-semibold">76.2%</span>
+</div>
+<div class="w-full h-2 rounded-full bg-white/5 overflow-hidden">
+<div class="h-full rounded-full bg-gradient-to-r from-violet-500 to-teal-400 shadow-sm shadow-violet-500/40" style="width: 76.2%"></div>
+</div>
+</div>
+<!-- 5. Hallucination Rate -->
+<div>
+<div class="flex justify-between items-center text-xs mb-1.5">
+<span class="text-slate-300 font-medium">Hallucination Rate</span>
+<span class="text-coralAccent font-semibold">4.1%</span>
+</div>
+<div class="w-full h-2 rounded-full bg-white/5 overflow-hidden">
+<div class="h-full rounded-full bg-gradient-to-r from-coralAccent to-rose-400 shadow-sm shadow-red-500/40" style="width: 4.1%"></div>
+</div>
+</div>
+</div>
+<!-- Micro summary footnote -->
+<div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xs text-emerald-400">check_circle</span>
+            All metrics above target baseline
+          </span>
+<a class="text-purple-400 hover:text-purple-300 font-medium" href="#">Details →</a>
+</div>
+</div>
+</div>
+<!-- Bottom Section: Recent Test Cases Card -->
+<div class="glass-card rounded-2xl p-6">
+<!-- Card Header -->
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="text-base font-semibold text-white font-headline tracking-tight">Recent Test Cases</h3>
+<p class="text-xs text-slate-400">Representative evaluation items from execution trace</p>
+</div>
+<a class="text-xs font-semibold text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors" href="#">
+<span>View all</span>
+<span>→</span>
+</a>
+</div>
+<!-- Styled Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs border-collapse">
+<thead>
+<tr class="border-b border-white/10 text-slate-400 uppercase tracking-wider text-[11px]">
+<th class="py-3 px-4 font-semibold w-16">#</th>
+<th class="py-3 px-4 font-semibold">Input</th>
+<th class="py-3 px-4 font-semibold">Expected Outcome</th>
+<th class="py-3 px-4 font-semibold w-28">Status</th>
+<th class="py-3 px-4 font-semibold w-24 text-right">Latency</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5 font-medium">
+<!-- Row 1 -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="py-3.5 px-4 font-mono text-slate-400 text-xs">001</td>
+<td class="py-3.5 px-4 text-white font-normal">
+<span class="group-hover:text-purple-300 transition-colors">"Can I get a refund for my order?"</span>
+</td>
+<td class="py-3.5 px-4 text-slate-300">Correct refund eligibility</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  Success
+                </span>
+</td>
+<td class="py-3.5 px-4 text-right text-slate-300 font-mono">2.1s</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="py-3.5 px-4 font-mono text-slate-400 text-xs">002</td>
+<td class="py-3.5 px-4 text-white font-normal">
+<span class="group-hover:text-purple-300 transition-colors">"Track my order #12345"</span>
+</td>
+<td class="py-3.5 px-4 text-slate-300">Provide tracking details</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  Success
+                </span>
+</td>
+<td class="py-3.5 px-4 text-right text-slate-300 font-mono">3.3s</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="py-3.5 px-4 font-mono text-slate-400 text-xs">003</td>
+<td class="py-3.5 px-4 text-white font-normal">
+<span class="group-hover:text-purple-300 transition-colors">"I received a damaged item"</span>
+</td>
+<td class="py-3.5 px-4 text-slate-300">Correct return process</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-red-500/15 text-coralAccent border border-red-500/30">
+<span class="w-1.5 h-1.5 rounded-full bg-coralAccent"></span>
+                  Failed
+                </span>
+</td>
+<td class="py-3.5 px-4 text-right text-slate-300 font-mono">5.2s</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="py-3.5 px-4 font-mono text-slate-400 text-xs">004</td>
+<td class="py-3.5 px-4 text-white font-normal">
+<span class="group-hover:text-purple-300 transition-colors">"Do you ship internationally?"</span>
+</td>
+<td class="py-3.5 px-4 text-slate-300">Provide shipping regions</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  Success
+                </span>
+</td>
+<td class="py-3.5 px-4 text-right text-slate-300 font-mono">2.4s</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</body></html>

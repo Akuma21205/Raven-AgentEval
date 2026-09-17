@@ -1,0 +1,453 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AgentEval — Build Reliable AI Agents</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Plus Jakarta Sans Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS with Forms & Container Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration verbatim as required -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface": "rgba(9, 13, 26, 0.8)",
+            "on-surface": "#F8FAFC",
+            "on-surface-variant": "#94A3B8",
+            "primary": "#8B5CF6",
+            "primary-container": "#7C3AED",
+            "outline-variant": "rgba(255, 255, 255, 0.1)"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          "spacing": {},
+          "fontFamily": {
+            "headline": [
+              "Plus Jakarta Sans", "sans-serif"
+            ],
+            "display": [
+              "Plus Jakarta Sans", "sans-serif"
+            ],
+            "body": [
+              "Plus Jakarta Sans", "sans-serif"
+            ],
+            "label": [
+              "Plus Jakarta Sans", "sans-serif"
+            ]
+          },
+          "fontSize": {}
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #090D1A;
+      color: #F8FAFC;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient Aurora Ribbons */
+    .aurora-glow-1 {
+      position: absolute;
+      width: 700px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(124, 58, 237, 0.12) 45%, rgba(9, 13, 26, 0) 75%);
+      filter: blur(80px);
+      transform: rotate(-15deg);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .aurora-glow-2 {
+      position: absolute;
+      width: 650px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.22) 0%, rgba(168, 85, 247, 0.10) 50%, rgba(9, 13, 26, 0) 80%);
+      filter: blur(95px);
+      transform: rotate(25deg);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .aurora-glow-3 {
+      position: absolute;
+      width: 800px;
+      height: 380px;
+      background: radial-gradient(ellipse, rgba(6, 182, 212, 0.16) 0%, rgba(99, 102, 241, 0.14) 40%, rgba(9, 13, 26, 0) 75%);
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glassmorphism Classes */
+    .glass-card {
+      background: rgba(16, 22, 40, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-card-hover {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card-hover:hover {
+      transform: translateY(-4px);
+      border-color: rgba(168, 85, 247, 0.35);
+      box-shadow: 0 24px 48px -12px rgba(124, 58, 237, 0.25), inset 0 1px 2px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    /* 3D Isometric Scene Styling */
+    .isometric-stage {
+      perspective: 1100px;
+      transform-style: preserve-3d;
+    }
+
+    .iso-cube {
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.4s ease;
+    }
+    .iso-cube:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(0.5deg); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.95; }
+    }
+
+    .floating-anim {
+      animation: floatSlow 6s ease-in-out infinite;
+    }
+
+    .pulse-anim {
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="relative bg-[#090D1A] text-slate-100 selection:bg-purple-500 selection:text-white flex flex-col min-h-screen">
+<!-- Ambient Flowing Aurora Ribbon Backgrounds -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+<div class="aurora-glow-1 -top-24 -left-32 animate-pulse"></div>
+<div class="aurora-glow-2 top-1/4 right-0"></div>
+<div class="aurora-glow-3 top-2/3 left-1/3"></div>
+<div class="aurora-glow-2 -bottom-48 -right-20"></div>
+<!-- Soft light veil texture gradient -->
+<div class="absolute inset-0 bg-gradient-to-b from-[#090D1A]/40 via-transparent to-[#090D1A]"></div>
+</div>
+<!-- Shared Component: TopNavBar (Exact mapping from JSON anchors) -->
+<header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/70 dark:bg-surface/70 backdrop-blur-xl border-b border-outline-variant/10 shadow-lg shadow-black/20">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<!-- Brand Logo Anchor -->
+<a class="font-headline font-bold text-lg text-on-surface dark:text-on-surface flex items-center gap-2 group" href="#">
+<div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-600 via-indigo-500 to-fuchsia-400 p-[1px] flex items-center justify-center shadow-lg shadow-purple-600/30 group-hover:scale-105 transition-transform duration-200">
+<div class="w-full h-full bg-[#0E1326] rounded-[7px] flex items-center justify-center">
+<span class="material-symbols-outlined text-[#8B5CF6] text-xl" data-icon="auto_awesome">auto_awesome</span>
+</div>
+</div>
+<span class="tracking-tight text-white font-extrabold text-xl font-headline">AgentEval</span>
+</a>
+<!-- Desktop Navigation Links from JSON Blueprint -->
+<nav class="hidden md:flex items-center gap-8 font-headline text-sm font-medium">
+<a class="text-primary font-medium border-b-2 border-primary pb-1 flex items-center gap-1 hover:text-primary transition-colors duration-200" href="#product">
+          Product
+          <span class="material-symbols-outlined text-xs" data-icon="expand_more">expand_more</span>
+</a>
+<a class="text-on-surface-variant font-medium flex items-center gap-1 hover:text-primary transition-colors duration-200" href="#features">
+          Features
+        </a>
+<a class="text-on-surface-variant font-medium flex items-center gap-1 hover:text-primary transition-colors duration-200" href="#benchmarks">
+          Benchmarks
+        </a>
+<a class="text-on-surface-variant font-medium flex items-center gap-1 hover:text-primary transition-colors duration-200" href="#documentation">
+          Documentation
+          <span class="material-symbols-outlined text-xs" data-icon="expand_more">expand_more</span>
+</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#pricing">
+          Pricing
+        </a>
+</nav>
+<!-- Trailing Action Buttons -->
+<div class="flex items-center gap-4">
+<!-- Sign In action -->
+<a class="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200 active:opacity-80" href="#">
+          Sign In
+        </a>
+<!-- Deploy Agent / Primary CTA -->
+<a class="relative group inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-full bg-gradient-to-r from-[#7C3AED] via-purple-600 to-[#6366F1] hover:brightness-110 active:scale-95 transition-all shadow-md shadow-purple-600/30" href="#deploy">
+<span class="">Deploy Agent</span>
+<span class="material-symbols-outlined text-base" data-icon="arrow_forward">arrow_forward</span>
+</a>
+<!-- Dark mode indicator icon from JSON -->
+<button aria-label="Toggle Theme" class="p-2 text-slate-400 hover:text-white rounded-full hover:bg-white/5 transition-colors duration-200">
+<span class="material-symbols-outlined text-lg" data-icon="dark_mode">dark_mode</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="relative z-10 flex-grow pt-28 pb-16">
+<!-- Hero Section (Split Layout) -->
+<section class="max-w-7xl mx-auto px-6 pt-10 pb-20 lg:pt-16 lg:pb-28">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+<!-- Left Column: Copy & CTAs -->
+<div class="lg:col-span-6 flex flex-col items-start text-left">
+<!-- Top Badge -->
+<a class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-card border border-purple-500/30 text-xs text-purple-200 font-medium mb-8 hover:border-purple-400/60 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined text-sm text-purple-400 group-hover:rotate-12 transition-transform duration-300" data-icon="sparkles">arrow_back_ios_new</span>
+<span class="">Evaluate today. Ship better tomorrow.</span>
+<span class="material-symbols-outlined text-xs text-purple-300 group-hover:translate-x-0.5 transition-transform" data-icon="chevron_right">chevron_right</span>
+</a>
+<!-- Main Headline -->
+<h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12] mb-6 font-headline">
+            Build Reliable <br class="hidden sm:inline">
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-[#38BDF8] via-[#06B6D4] to-cyan-300 drop-shadow-[0_0_24px_rgba(6,182,212,0.35)]">
+              AI Agents
+            </span>
+</h1>
+<!-- Subtitle -->
+<p class="text-slate-300 text-lg sm:text-xl font-normal leading-relaxed max-w-xl mb-10">
+            Evaluate, debug, compare, and improve your agents — with powerful evaluation pipelines, rich traces, and beautiful insights.
+          </p>
+<!-- Action Buttons -->
+<div class="flex flex-wrap items-center gap-4 w-full sm:w-auto">
+<!-- Primary CTA -->
+<a class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-white bg-gradient-to-r from-[#7C3AED] via-purple-600 to-[#6366F1] shadow-[0_10px_30px_-5px_rgba(124,58,237,0.5)] hover:shadow-[0_15px_35px_-3px_rgba(124,58,237,0.65)] hover:brightness-110 active:scale-95 transition-all text-base" href="#deploy">
+<span class="">Get Started Free</span>
+<span class="material-symbols-outlined text-lg" data-icon="arrow_forward">arrow_forward</span>
+</a>
+<!-- Secondary Ghost Button -->
+<a class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-medium text-slate-200 glass-card hover:bg-white/[0.08] hover:text-white hover:border-white/20 active:scale-95 transition-all text-base" href="#demo">
+<span class="flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-white">
+<span class="material-symbols-outlined text-sm" data-icon="play_arrow" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">play_arrow</span>
+</span>
+<span class="">Watch Demo</span>
+</a>
+</div>
+<!-- Micro Credential Metric -->
+<div class="mt-12 flex items-center gap-6 pt-6 border-t border-white/5 w-full">
+<div>
+<div class="text-2xl font-bold text-white tracking-tight">99.8%</div>
+<div class="text-xs text-slate-400 font-medium">Evaluation Accuracy</div>
+</div>
+<div class="h-8 w-[1px] bg-white/10"></div>
+<div>
+<div class="text-2xl font-bold text-white tracking-tight">&lt;45ms</div>
+<div class="text-xs text-slate-400 font-medium">Trace Telemetry Latency</div>
+</div>
+<div class="h-8 w-[1px] bg-white/10"></div>
+<div>
+<div class="text-2xl font-bold text-white tracking-tight">10M+</div>
+<div class="text-xs text-slate-400 font-medium">Daily Agent Runs</div>
+</div>
+</div>
+</div>
+<!-- Right Column: 3D Isometric Floating Glass Architecture Graphic -->
+<div class="lg:col-span-6 relative flex items-center justify-center"><div class="relative w-full max-w-lg lg:max-w-xl aspect-square flex items-center justify-center"><div class="absolute inset-0 m-auto w-80 h-80 rounded-full bg-gradient-to-tr from-purple-600/30 via-cyan-500/20 to-transparent blur-3xl pointer-events-none"></div><svg class="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pipe-cyan" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#06B6D4" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#7C3AED" stop-opacity="0.3"></stop></linearGradient><linearGradient id="pipe-purple" x1="100%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#A855F7" stop-opacity="0.85"></stop><stop offset="100%" stop-color="#38BDF8" stop-opacity="0.3"></stop></linearGradient><linearGradient id="pipe-emerald" x1="100%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#34D399" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#06B6D4" stop-opacity="0.2"></stop></linearGradient></defs><path d="M 120 95 C 170 120, 200 170, 230 220" stroke="url(#pipe-purple)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.75"></path><circle cx="120" cy="95" r="3" fill="#A855F7" opacity="0.9"></circle><path d="M 110 405 C 160 380, 195 320, 235 275" stroke="url(#pipe-cyan)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.75"></path><circle cx="110" cy="405" r="3" fill="#06B6D4" opacity="0.9"></circle><path d="M 385 130 C 340 160, 310 200, 275 235" stroke="url(#pipe-cyan)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.75"></path><circle cx="385" cy="130" r="3" fill="#38BDF8" opacity="0.9"></circle><path d="M 380 395 C 335 370, 305 315, 270 270" stroke="url(#pipe-emerald)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.75"></path><circle cx="380" cy="395" r="3" fill="#34D399" opacity="0.9"></circle></svg><div class="relative z-20 w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center p-2"><div class="relative group flex items-center justify-center"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WHRzmKVNMGx_AC66x8dXVd5htDamNUsfC0cUlKObzVPKhKhrE6gAgOmmwBHyLr1Ei8zxRgwyWhbnRImLpT3Lks4kAgSCIUH9I03e3bl1zVrlNg5GYErcXKB9X-E3rSgFObQeIpjK7uNFx-lumYty-dOmPQYEn5mCNfeRks5XMtkGe3FAbSLS9AwHCIlRz0p1rV2iYsmqC4ENV43ZlEM5VT36kWIckn1TyC3Jr6Q2CUoqHhn4u--cA-FKw" alt="AI Observability &amp; Agent Evaluation 3D Cube" class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 pointer-events-none" style="mix-blend-mode: screen; -webkit-mask-image: radial-gradient(circle at center, black 58%, transparent 76%); mask-image: radial-gradient(circle at center, black 58%, transparent 76%);"></div></div><div class="absolute top-2 left-0 sm:left-2 z-30 floating-anim" style="animation-delay: 0.2s;"><div class="glass-card rounded-xl p-3 border border-purple-500/30 shadow-lg shadow-purple-900/20 backdrop-blur-xl"><div class="flex items-center gap-2 mb-1"><span class="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span><span class="text-[11px] font-bold text-purple-300 tracking-wide uppercase font-headline">Evaluate: Agent v2.4</span></div><div class="flex items-center gap-2 text-xs"><span class="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-semibold text-[10px]">PASSED</span><span class="text-slate-300 font-medium text-[11px]">Accuracy: 99.4%</span></div></div></div><div class="absolute top-6 right-0 sm:right-2 z-30 floating-anim" style="animation-delay: 1.4s;"><div class="glass-card rounded-xl p-3 border border-cyan-500/30 shadow-lg shadow-cyan-900/20 backdrop-blur-xl"><div class="flex items-center gap-2 mb-1"><span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span><span class="text-[11px] font-bold text-cyan-300 tracking-wide uppercase font-headline">Telemetry Pipeline</span></div><div class="text-xs text-slate-300 flex items-center gap-2"><span class="font-medium text-[11px]">Trace Latency:</span><span class="font-bold text-cyan-200 text-[11px]">12ms (p99)</span></div></div></div><div class="absolute bottom-4 left-0 sm:left-2 z-30 floating-anim" style="animation-delay: 2.2s;"><div class="glass-card rounded-xl p-3 border border-emerald-500/30 shadow-lg shadow-emerald-900/20 backdrop-blur-xl"><div class="flex items-center gap-2 mb-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span><span class="text-[11px] font-bold text-emerald-300 tracking-wide uppercase font-headline">Improve: Self-Refine Loop</span></div><div class="flex items-center gap-2 text-xs"><span class="text-slate-300 text-[11px]">Reward Shift:</span><span class="font-bold text-emerald-400 text-[11px]">+18.2% Gain</span></div></div></div><div class="absolute bottom-2 right-0 sm:right-2 z-30 floating-anim" style="animation-delay: 3.1s;"><div class="glass-card rounded-xl p-3 border border-sky-500/30 shadow-lg shadow-sky-900/20 backdrop-blur-xl"><div class="flex items-center gap-2 mb-1"><span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span><span class="text-[11px] font-bold text-sky-300 tracking-wide uppercase font-headline">Deploy: Cluster 01</span></div><div class="flex items-center gap-2 text-xs"><span class="px-1.5 py-0.5 rounded bg-sky-500/15 text-sky-300 font-semibold text-[10px]">ACTIVE</span><span class="text-slate-300 text-[11px]">Guard Armed</span></div></div></div></div></div>
+</div>
+</section>
+<!-- 4 Feature Cards Grid Section -->
+<section class="max-w-7xl mx-auto px-6 py-12">
+<div class="text-center max-w-2xl mx-auto mb-12">
+<h2 class="text-2xl sm:text-3xl font-bold text-white font-headline tracking-tight mb-3">
+          Engineered for Rigorous Production Loops
+        </h2>
+<p class="text-slate-400 text-sm sm:text-base leading-relaxed">
+          Everything your team needs to test, observe, and harden autonomous LLM pipelines.
+        </p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Feature Card 1 -->
+<div class="glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-5 group-hover:scale-110 group-hover:bg-purple-500/25 transition-all duration-300 shadow-md shadow-purple-900/20">
+<span class="material-symbols-outlined text-2xl" data-icon="track_changes">track_changes</span>
+</div>
+<h3 class="text-lg font-bold text-white font-headline mb-2 group-hover:text-purple-300 transition-colors">
+              Run Evaluations
+            </h3>
+<p class="text-slate-400 text-sm leading-relaxed">
+              Test agents at scale across thousands of complex multivariant trajectories and domain datasets.
+            </p>
+</div>
+<div class="mt-6 pt-4 border-t border-white/5 flex items-center text-xs font-semibold text-purple-400 group-hover:text-purple-300">
+<span class="">Explore benchmarks</span>
+<span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Feature Card 2 -->
+<div class="glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-5 group-hover:scale-110 group-hover:bg-cyan-500/25 transition-all duration-300 shadow-md shadow-cyan-900/20">
+<span class="material-symbols-outlined text-2xl" data-icon="explore">explore</span>
+</div>
+<h3 class="text-lg font-bold text-white font-headline mb-2 group-hover:text-cyan-300 transition-colors">
+              Compare Versions
+            </h3>
+<p class="text-slate-400 text-sm leading-relaxed">
+              Track regressions effortlessly with side-by-side prompt diffs, token metrics, and cost heatmaps.
+            </p>
+</div>
+<div class="mt-6 pt-4 border-t border-white/5 flex items-center text-xs font-semibold text-cyan-400 group-hover:text-cyan-300">
+<span class="">Regression checks</span>
+<span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Feature Card 3 -->
+<div class="glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 mb-5 group-hover:scale-110 group-hover:bg-sky-500/25 transition-all duration-300 shadow-md shadow-sky-900/20">
+<span class="material-symbols-outlined text-2xl" data-icon="radar">radar</span>
+</div>
+<h3 class="text-lg font-bold text-white font-headline mb-2 group-hover:text-sky-300 transition-colors">
+              Debug with Traces
+            </h3>
+<p class="text-slate-400 text-sm leading-relaxed">
+              See what's happening under the hood with nested flamegraphs, tool calls, and state transitions.
+            </p>
+</div>
+<div class="mt-6 pt-4 border-t border-white/5 flex items-center text-xs font-semibold text-sky-400 group-hover:text-sky-300">
+<span class="">Deep observability</span>
+<span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Feature Card 4 -->
+<div class="glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-5 group-hover:scale-110 group-hover:bg-emerald-500/25 transition-all duration-300 shadow-md shadow-emerald-900/20">
+<span class="material-symbols-outlined text-2xl" data-icon="sync">sync</span>
+</div>
+<h3 class="text-lg font-bold text-white font-headline mb-2 group-hover:text-emerald-300 transition-colors">
+              Improve Continuously
+            </h3>
+<p class="text-slate-400 text-sm leading-relaxed">
+              Iterate with confidence through synthetic generation, human-in-the-loop annotations, and guards.
+            </p>
+</div>
+<div class="mt-6 pt-4 border-t border-white/5 flex items-center text-xs font-semibold text-emerald-400 group-hover:text-emerald-300">
+<span class="">Autonomous pipelines</span>
+<span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof Section -->
+<section class="max-w-7xl mx-auto px-6 py-14">
+<div class="glass-card rounded-2xl py-8 px-6 border border-white/[0.05]">
+<h3 class="text-xs font-semibold tracking-wider text-slate-400 uppercase text-center mb-8 font-headline">
+          TRUSTED BY BUILDERS FROM
+        </h3>
+<!-- Crisp Monochrome Slate Logos -->
+<div class="flex flex-wrap items-center justify-center gap-8 sm:gap-14 lg:gap-16">
+<!-- OpenAI -->
+<div class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer opacity-75 hover:opacity-100">
+<span class="material-symbols-outlined text-2xl" data-icon="flare">flare</span>
+<span class="text-lg font-bold tracking-tight">OpenAI</span>
+</div>
+<!-- Google -->
+<div class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer opacity-75 hover:opacity-100">
+<span class="material-symbols-outlined text-2xl" data-icon="travel_explore">travel_explore</span>
+<span class="text-lg font-bold tracking-tight">Google</span>
+</div>
+<!-- Meta -->
+<div class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer opacity-75 hover:opacity-100">
+<span class="material-symbols-outlined text-2xl" data-icon="all_inclusive">all_inclusive</span>
+<span class="text-lg font-bold tracking-tight">Meta</span>
+</div>
+<!-- Microsoft -->
+<div class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer opacity-75 hover:opacity-100">
+<span class="material-symbols-outlined text-2xl" data-icon="grid_4x4">grid_4x4</span>
+<span class="text-lg font-bold tracking-tight">Microsoft</span>
+</div>
+<!-- Anthropic -->
+<div class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer opacity-75 hover:opacity-100">
+<span class="material-symbols-outlined text-2xl" data-icon="asterisk">asterisk</span>
+<span class="text-lg font-bold tracking-tight">Anthropic</span>
+</div>
+<!-- Amazon -->
+<div class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer opacity-75 hover:opacity-100">
+<span class="material-symbols-outlined text-2xl" data-icon="package_2">package_2</span>
+<span class="text-lg font-bold tracking-tight">Amazon</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Scroll Indicator -->
+<div class="flex flex-col items-center justify-center pt-6 pb-2 text-slate-400">
+<span class="text-xs font-medium tracking-wide mb-1 opacity-70">Scroll to explore</span>
+<span class="material-symbols-outlined text-sm animate-bounce text-purple-400" data-icon="expand_more">expand_more</span>
+</div>
+</main>
+<!-- Shared Component: Footer (Exact mapping from JSON anchors) -->
+<footer class="w-full bg-surface/50 dark:bg-surface/50 backdrop-blur-md border-t border-outline-variant/10 relative z-20">
+<div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
+<!-- Footer Brand & Copyright Text from JSON -->
+<div class="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+<span class="font-headline font-bold text-base text-on-surface dark:text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-base" data-icon="auto_awesome">auto_awesome</span>
+          AgentEval
+        </span>
+<span class="hidden sm:inline text-slate-600">•</span>
+<p class="font-body text-sm text-on-surface-variant">
+          © 2025 AgentEval Inc. All rights reserved.
+        </p>
+</div>
+<!-- Links defined strictly in JSON -->
+<div class="flex flex-wrap items-center justify-center gap-6 font-body text-sm">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#terms">
+          Terms
+        </a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#privacy">
+          Privacy
+        </a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#security">
+          Security
+        </a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#changelog">
+          Changelog
+        </a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 flex items-center gap-1.5" href="#system-status">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          System Status
+        </a>
+</div>
+</div>
+<!-- Soft Purple & Magenta Aurora Silk Edge Glow Ribbon at very bottom -->
+<div class="h-1 w-full bg-gradient-to-r from-transparent via-purple-500/50 via-pink-500/40 to-transparent"></div>
+</footer>
+
+
+</body></html>

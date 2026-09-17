@@ -1,0 +1,453 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AgentEval - Settings</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {},
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans"],
+            display: ["Plus Jakarta Sans"],
+            body: ["Plus Jakarta Sans"],
+            label: ["Plus Jakarta Sans"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #090D1A;
+      color: #F8FAFC;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+
+    /* Aurora Glow background effects */
+    .aurora-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .aurora-blob-1 {
+      position: absolute;
+      top: -10%;
+      left: 20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, rgba(99, 102, 241, 0.08) 50%, transparent 75%);
+      filter: blur(80px);
+      border-radius: 50%;
+    }
+
+    .aurora-blob-2 {
+      position: absolute;
+      bottom: 5%;
+      right: 5%;
+      width: 700px;
+      height: 550px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.14) 0%, rgba(217, 70, 239, 0.06) 45%, transparent 70%);
+      filter: blur(95px);
+      border-radius: 50%;
+    }
+
+    .aurora-blob-3 {
+      position: absolute;
+      top: 40%;
+      left: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(79, 70, 229, 0.12) 0%, transparent 70%);
+      filter: blur(80px);
+      border-radius: 50%;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  </style>
+</head>
+<body class="bg-[#090D1A] text-slate-100 min-h-screen relative antialiased selection:bg-purple-500 selection:text-white">
+<!-- Ambient Aurora Backdrops -->
+<div class="aurora-bg">
+<div class="aurora-blob-1"></div>
+<div class="aurora-blob-2"></div>
+<div class="aurora-blob-3"></div>
+</div>
+<!-- Shared Component: SideNavBar -->
+<aside class="fixed top-0 left-0 h-screen w-64 flex flex-col z-30 bg-[#0c1222]/85 backdrop-blur-xl border-r border-white/10 shadow-2xl">
+<div class="h-full flex flex-col justify-between p-4">
+<!-- Top Section -->
+<div class="space-y-6">
+<!-- Logo & Header -->
+<div class="flex items-center justify-between px-2 pt-1">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-purple-500/25 ring-1 ring-white/20">
+<span class="material-symbols-outlined text-white text-[20px]" data-icon="experiment">experiment</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline text-base font-bold tracking-tight text-white">AgentEval</span>
+<span class="text-[10px] font-semibold tracking-wide uppercase px-1.5 py-0.2 text-purple-300 bg-purple-500/20 border border-purple-500/30 rounded">v2</span>
+</div>
+<p class="text-[11px] text-slate-400 font-medium tracking-tight">AI Benchmarking Platform</p>
+</div>
+</div>
+</div>
+<!-- Action Button: CTA -->
+<button class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white text-sm font-semibold tracking-wide flex items-center justify-center gap-2 shadow-lg shadow-violet-600/30 hover:shadow-violet-600/40 transition-all duration-200 active:scale-[0.98] border border-white/10">
+<span class="material-symbols-outlined text-sm font-bold" data-icon="add">add</span>
+<span>New Experiment</span>
+</button>
+<!-- Navigation Tabs -->
+<nav class="space-y-1 pt-1">
+<!-- Overview -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- Benchmarks -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="tune">tune</span>
+<span>Benchmarks</span>
+</a>
+<!-- Runs & Evals -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="experiment">experiment</span>
+<span>Runs &amp; Evals</span>
+</a>
+<!-- Models -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="smart_toy">smart_toy</span>
+<span>Models</span>
+</a>
+<!-- Settings (ACTIVE MATCH) -->
+<a class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium text-white bg-white/10 shadow-sm ring-1 ring-white/10 relative overflow-hidden group" href="#">
+<div class="flex items-center gap-3 relative z-10">
+<span class="material-symbols-outlined text-purple-400 text-[20px]" data-icon="settings">settings</span>
+<span class="font-medium text-white">Settings</span>
+</div>
+<span class="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,1)]"></span>
+</a>
+</nav>
+</div>
+<!-- Bottom Sidebar Utility Section -->
+<div class="space-y-4 pt-4 border-t border-white/10">
+<!-- Monthly Usage Progress Card -->
+<div class="p-3 rounded-xl bg-white/[0.03] border border-white/10 space-y-2">
+<div class="flex items-center justify-between text-xs">
+<span class="text-slate-300 font-medium">Monthly Evals</span>
+<span class="text-purple-300 font-semibold">4.2K / 10K</span>
+</div>
+<div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-violet-500 to-purple-400 rounded-full w-[42%]"></div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="text-[11px] text-slate-400">Pro Plan Tier</span>
+<button class="text-[11px] font-semibold text-purple-400 hover:text-purple-300 hover:underline">Upgrade</button>
+</div>
+</div>
+<!-- Footer Navigation Links -->
+<div class="space-y-0.5">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="menu_book">menu_book</span>
+<span>Documentation</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="headset_mic">headset_mic</span>
+<span>Support</span>
+</a>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar Desktop Header -->
+<header class="sticky top-0 right-0 z-20 w-[calc(100%-16rem)] ml-auto bg-[#090D1A]/70 backdrop-blur-md border-b border-white/10 shadow-sm">
+<div class="flex justify-between items-center px-8 py-3.5 w-full">
+<!-- Search on Left -->
+<div class="relative w-96">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]" data-icon="search">search</span>
+<input class="w-full pl-10 pr-14 py-2 bg-white/[0.04] hover:bg-white/[0.07] focus:bg-white/[0.08] border border-white/10 focus:border-purple-500/50 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none transition-all duration-150" placeholder="Search settings, API keys, integrations..." type="text">
+<div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
+<kbd class="px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 bg-white/5 border border-white/10 rounded">⌘K</kbd>
+</div>
+</div>
+<!-- Trailing Action Icons & Profile -->
+<div class="flex items-center gap-3">
+<!-- Notifications Bell -->
+<button class="relative p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" title="Notifications">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-purple-500 rounded-full ring-2 ring-[#090D1A]"></span>
+</button>
+<!-- Help Icon -->
+<button class="p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" title="Help &amp; Feedback">
+<span class="material-symbols-outlined text-[20px]" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-5 w-px bg-white/10 mx-1"></div>
+<!-- Profile / Trailing Primary Action -->
+<div class="flex items-center gap-3 pl-1 cursor-pointer group hover:bg-white/5 py-1.5 px-2.5 rounded-xl transition-colors">
+<div class="relative">
+<img class="w-8 h-8 rounded-full object-cover ring-1 ring-purple-500/40" data-alt="Modern professional portrait of Shashank, an AI ML engineer with stylish dark rim glasses in a dimly lit studio setting with deep purple cinematic rim lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzobYCrGudCq8BnQBi9Rpe6-0AUWZj9EdB1_gC59merc1fLIID-g1pxNoWoJtVKpvuAD0K20SdzdIQIGWdV78qjF2Y4bphkRDODaaFXde_ePFgBKx3t8ObW5akgCQSj6eINqwvP1P-T_j0k4kpjCmbf32gAuiK9AfX9e7gdUtqZaGfIR5C6CkuYGCdoYWLl8Cmp54Pm7sOHxkdvVaTHnQbsc4abuXK3lhQdY1Tg9ay9uTvIYjvjtgwwmewkeLB-WjtK_isE9yzqX0">
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-[#090D1A] rounded-full"></span>
+</div>
+<div class="flex flex-col text-left">
+<span class="font-headline text-sm font-semibold text-white tracking-tight leading-tight group-hover:text-purple-300 transition-colors">Shashank</span>
+<span class="text-[11px] text-slate-400">Senior ML Eng</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-[18px] group-hover:text-white transition-colors" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas Content Area -->
+<main class="w-[calc(100%-16rem)] ml-auto px-8 py-8 relative z-10 space-y-8">
+<!-- Page Header & Action cluster -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<nav class="flex items-center gap-2 text-xs font-medium text-slate-400 mb-2">
+<span>Settings</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-purple-400 font-semibold">Integrations &amp; Providers</span>
+</nav>
+<h1 class="font-headline text-3xl font-bold tracking-tight text-white">Settings</h1>
+<p class="text-slate-400 text-sm mt-1">Manage your preferences and integrations.</p>
+</div>
+<div class="flex items-center gap-3">
+<a class="px-3.5 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-[16px]" data-icon="menu_book">menu_book</span>
+<span>Documentation</span>
+</a>
+<button class="px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white text-xs font-semibold tracking-wide flex items-center gap-2 shadow-lg shadow-purple-600/25 border border-white/10 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-[16px]" data-icon="add">add</span>
+<span>Add Integration</span>
+</button>
+</div>
+</div>
+<!-- Horizontal Settings Tabs Row -->
+<div class="border-b border-white/10">
+<div class="flex items-center gap-8 text-sm">
+<button class="pb-3 text-slate-400 hover:text-slate-200 transition-colors font-medium relative flex items-center gap-2">
+<span>Profile</span>
+</button>
+<button class="pb-3 text-slate-400 hover:text-slate-200 transition-colors font-medium relative flex items-center gap-2">
+<span>API Keys</span>
+</button>
+<!-- Active Tab: Integrations -->
+<button class="pb-3 text-white font-semibold relative flex items-center gap-2">
+<span class="text-purple-400">Integrations</span>
+<span class="px-2 py-0.5 text-[10px] font-semibold bg-purple-500/20 text-purple-300 rounded-full border border-purple-500/30">4 active</span>
+<!-- Active underline bar -->
+<div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-indigo-500 shadow-[0_0_12px_rgba(168,85,247,0.8)]"></div>
+</button>
+<button class="pb-3 text-slate-400 hover:text-slate-200 transition-colors font-medium relative flex items-center gap-2">
+<span>Team</span>
+</button>
+<button class="pb-3 text-slate-400 hover:text-slate-200 transition-colors font-medium relative flex items-center gap-2">
+<span>Usage &amp; Billing</span>
+</button>
+<button class="pb-3 text-slate-400 hover:text-slate-200 transition-colors font-medium relative flex items-center gap-2">
+<span>Security</span>
+</button>
+</div>
+</div>
+<!-- Integrations Panel (Main Content Glassmorphic Container) -->
+<section class="bg-[#101626]/70 backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
+<!-- Card Sub-header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-white/10 gap-2">
+<div>
+<h2 class="font-headline text-lg font-bold text-white tracking-tight">Model Providers &amp; Endpoints</h2>
+<p class="text-xs text-slate-400 mt-1">Connect LLM providers and custom inference servers to run benchmarks and automated evaluations.</p>
+</div>
+<div class="flex items-center gap-2 self-start sm:self-auto">
+<span class="text-xs text-slate-400 font-medium">Auto-sync:</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Enabled</span>
+</div>
+</div>
+<!-- Provider Rows List -->
+<div class="divide-y divide-white/5">
+<!-- Row 1: OpenAI -->
+<div class="py-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-white/[0.02] px-3 -mx-3 rounded-xl transition-colors">
+<div class="flex items-start md:items-center gap-4">
+<!-- Logo container -->
+<div class="w-12 h-12 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0 shadow-inner">
+<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 4a6 6 0 0 0-6 6c0 1.66.67 3.16 1.76 4.24l.01-.01A6 6 0 1 0 12 6z"></path>
+<path d="M12 8v8"></path>
+<path d="M8 12h8"></path>
+</svg>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 flex-wrap">
+<h3 class="font-semibold text-white text-base">OpenAI</h3>
+<span class="px-2 py-0.5 text-[11px] font-mono bg-white/[0.05] text-slate-300 rounded border border-white/10">gpt-4o, gpt-4o-mini</span>
+</div>
+<p class="text-slate-400 text-xs">Used for LLM evaluations</p>
+</div>
+</div>
+<div class="flex items-center gap-4 self-end md:self-auto shrink-0">
+<!-- Connected Status Pill -->
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+<span>Connected</span>
+</span>
+<!-- Action Button -->
+<button class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 transition-colors">
+              Configure
+            </button>
+</div>
+</div>
+<!-- Row 2: Google -->
+<div class="py-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-white/[0.02] px-3 -mx-3 rounded-xl transition-colors">
+<div class="flex items-start md:items-center gap-4">
+<!-- Logo container -->
+<div class="w-12 h-12 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0 shadow-inner">
+<svg class="w-6 h-6" viewBox="0 0 24 24">
+<path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" fill="#4285F4"></path>
+<path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.35 24 12 24z" fill="#34A853"></path>
+<path d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z" fill="#FBBC05"></path>
+<path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" fill="#EA4335"></path>
+</svg>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 flex-wrap">
+<h3 class="font-semibold text-white text-base">Google</h3>
+<span class="px-2 py-0.5 text-[11px] font-mono bg-white/[0.05] text-slate-300 rounded border border-white/10">gemini-1.5-pro, text-embedding-004</span>
+</div>
+<p class="text-slate-400 text-xs">Used for embeddings &amp; eval</p>
+</div>
+</div>
+<div class="flex items-center gap-4 self-end md:self-auto shrink-0">
+<!-- Connected Status Pill -->
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+<span>Connected</span>
+</span>
+<!-- Action Button -->
+<button class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 transition-colors">
+              Configure
+            </button>
+</div>
+</div>
+<!-- Row 3: Anthropic -->
+<div class="py-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-white/[0.02] px-3 -mx-3 rounded-xl transition-colors">
+<div class="flex items-start md:items-center gap-4">
+<!-- Logo container -->
+<div class="w-12 h-12 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0 shadow-inner">
+<span class="font-serif font-black text-xl text-amber-200 tracking-tight">A\</span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 flex-wrap">
+<h3 class="font-semibold text-white text-base">Anthropic</h3>
+<span class="px-2 py-0.5 text-[11px] font-mono bg-white/[0.05] text-slate-300 rounded border border-white/10">Claude 3.5 Sonnet</span>
+</div>
+<p class="text-slate-400 text-xs">Used for model evaluation</p>
+</div>
+</div>
+<div class="flex items-center gap-4 self-end md:self-auto shrink-0">
+<!-- Not Connected Status Pill -->
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+<span>Not Connected</span>
+</span>
+<!-- Connect Filled Vibrant Purple Button -->
+<button class="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 shadow-lg shadow-purple-500/20 transition-all duration-200 active:scale-95 border border-white/10">
+              Connect
+            </button>
+</div>
+</div>
+<!-- Row 4: Custom Models -->
+<div class="py-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-white/[0.02] px-3 -mx-3 rounded-xl transition-colors">
+<div class="flex items-start md:items-center gap-4">
+<!-- Logo container -->
+<div class="w-12 h-12 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0 shadow-inner">
+<span class="material-symbols-outlined text-cyan-400 text-2xl" data-icon="memory">memory</span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 flex-wrap">
+<h3 class="font-semibold text-white text-base">Custom Models</h3>
+<span class="px-2 py-0.5 text-[11px] font-mono bg-white/[0.05] text-slate-300 rounded border border-white/10">Local endpoint: http://localhost:11434</span>
+</div>
+<p class="text-slate-400 text-xs">Use your own models (Ollama, vLLM, etc.)</p>
+</div>
+</div>
+<div class="flex items-center gap-4 self-end md:self-auto shrink-0">
+<!-- Connected Status Pill -->
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+<span>Connected</span>
+</span>
+<!-- Action Button -->
+<button class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 transition-colors">
+              Configure
+            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Quick Help / Enterprise Tip Card -->
+<div class="p-5 rounded-2xl bg-[#101626]/50 border border-white/10 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-purple-400 text-[20px]" data-icon="shield">shield</span>
+</div>
+<div>
+<p class="text-xs text-slate-300">
+            Need custom enterprise VPC or private subnet endpoints? 
+            <a class="text-purple-400 hover:text-purple-300 font-semibold underline underline-offset-2 ml-1" href="#">View our Enterprise Deployment Guide →</a>
+</p>
+<div class="flex items-center gap-3 mt-1.5 text-[11px] text-slate-400 font-medium">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-emerald-400 text-[14px]" data-icon="verified">verified</span>
+              SOC2 Type II Certified
+            </span>
+<span class="w-1 h-1 bg-white/20 rounded-full"></span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-emerald-400 text-[14px]" data-icon="lock">lock</span>
+              HIPAA Compliant
+            </span>
+<span class="w-1 h-1 bg-white/20 rounded-full"></span>
+<span>Zero Data Retention available</span>
+</div>
+</div>
+</div>
+<a class="text-xs font-semibold text-slate-300 hover:text-white py-1.5 px-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors whitespace-nowrap self-stretch sm:self-auto text-center" href="#">
+        Contact Solutions
+      </a>
+</div>
+</main>
+</body></html>

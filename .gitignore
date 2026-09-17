@@ -1,0 +1,32 @@
+# Environments & Secrets
+.env
+.env.local
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/*.local
+
+# Local SQLite databases & cache
+*.db
+*.sqlite
+*.sqlite3
+
+# Operating System & IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
